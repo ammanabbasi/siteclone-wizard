@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Enhanced SiteClone</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 30px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      .color-inputs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      #status {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 5px;
+        display: none;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      #results {
+        margin-top: 20px;
+        display: none;
+      }
+      .result-links a {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #007bff;
+      }
+      .result-links a:hover {
+        background: #e9ecef;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Enhanced SiteClone Test</h1>
+
+      <form id="cloneForm">
+        <div class="form-group">
+          <label for="url">Website URL:</label>
+          <input type="url" id="url" value="https://www.autotrademark.com/" required />
+        </div>
+
+        <div class="form-group">
+          <label for="brandName">Brand Name:</label>
+          <input type="text" id="brandName" value="Elite Auto Gallery" required />
+        </div>
+
+        <div class="form-group">
+          <label for="tagline">Tagline:</label>
+          <input type="text" id="tagline" value="Premium cars for discerning buyers" />
+        </div>
+
+        <div class="form-group">
+          <label>Brand Colors:</label>
+          <div class="color-inputs">
+            <div>
+              <label for="primary">Primary:</label>
+              <input type="color" id="primary" value="#1E40AF" />
+            </div>
+            <div>
+              <label for="secondary">Secondary:</label>
+              <input type="color" id="secondary" value="#DC2626" />
+            </div>
+            <div>
+              <label for="accent">Accent:</label>
+              <input type="color" id="accent" value="#10B981" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="font">Font Family:</label>
+          <select id="font">
+            <option value="Inter">Inter</option>
+            <option value="Roboto" selected>Roboto</option>
+            <option value="Open Sans">Open Sans</option>
+            <option value="Lato">Lato</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Poppins">Poppins</option>
+          </select>
+        </div>
+
+        <button type="submit" id="submitBtn">Clone Website</button>
+      </form>
+
+      <div id="status"></div>
+
+      <div id="results">
+        <h3>✅ Success!</h3>
+        <div class="result-links"></div>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('cloneForm')
+      const status = document.getElementById('status')
+      const results = document.getElementById('results')
+      const submitBtn = document.getElementById('submitBtn')
+
+      function showStatus(message, type = 'info') {
+        status.className = type
+        status.textContent = message
+        status.style.display = 'block'
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        submitBtn.disabled = true
+        submitBtn.textContent = 'Cloning...'
+        results.style.display = 'none'
+
+        const config = {
+          targetUrl: document.getElementById('url').value,
+          brandConfig: {
+            name: document.getElementById('brandName').value,
+            tagline: document.getElementById('tagline').value,
+            colors: {
+              primary: document.getElementById('primary').value,
+              secondary: document.getElementById('secondary').value,
+              accent: document.getElementById('accent').value,
+            },
+            typography: {
+              fontFamily: document.getElementById('font').value,
+            },
+          },
+        }
+
+        showStatus('🔄 Cloning website...', 'info')
+
+        try {
+          const response = await fetch('/api/clone', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(config),
+          })
+
+          const data = await response.json()
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || 'Clone failed')
+          }
+
+          showStatus('✅ Clone successful! Launching preview...', 'success')
+
+          // Launch preview
+          setTimeout(async () => {
+            try {
+              const launchResponse = await fetch(`/api/launch/${data.outputId}`, {
+                method: 'POST',
+              })
+
+              const launchData = await launchResponse.json()
+
+              if (launchResponse.ok && launchData.success) {
+                showStatus('🎉 Clone complete and preview launched!', 'success')
+
+                const resultLinks = document.querySelector('.result-links')
+                resultLinks.innerHTML = `
+                                <a href="${launchData.url}" target="_blank">🌐 View Preview</a>
+                                <a href="/api/download/${data.outputId}" download>📦 Download Project</a>
+                                <a href="/preview/${data.outputId}" target="_blank">📁 Browse Files</a>
+                                <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px;">
+                                    <strong>Stats:</strong><br>
+                                    HTML: ${(data.stats.htmlSize / 1024).toFixed(2)} KB<br>
+                                    Assets: ${data.stats.assetsDownloaded}<br>
+                                    Brand Replacements: ${data.stats.brandReplacementsMade}
+                                </div>
+                            `
+                results.style.display = 'block'
+              }
+            } catch (error) {
+              console.error('Launch error:', error)
+            }
+          }, 2000)
+        } catch (error) {
+          showStatus(`❌ Error: ${error.message}`, 'error')
+        } finally {
+          submitBtn.disabled = false
+          submitBtn.textContent = 'Clone Website'
+        }
+      })
+    </script>
+  </body>
+</html>

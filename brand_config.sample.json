@@ -1,0 +1,30 @@
+{
+  "targetUrl": "https://vercel.com",
+  "brandConfig": {
+    "name": "MyAwesomeBrand",
+    "tagline": "Building the future of web development",
+    "logo": "./assets/logo.svg",
+    "favicon": "./assets/favicon.ico",
+    "colors": {
+      "primary": "#0070F3",
+      "secondary": "#00D1B2",
+      "accent": "#FFD700",
+      "background": "#FFFFFF",
+      "foreground": "#000000"
+    },
+    "typography": {
+      "fontFamily": "Inter",
+      "headingFont": "Inter",
+      "bodyFont": "Inter"
+    },
+    "customContent": {
+      "hero_title": "Welcome to MyAwesomeBrand",
+      "hero_subtitle": "The fastest way to build modern web applications",
+      "cta_primary": "Get Started",
+      "cta_secondary": "Learn More",
+      "footer_copyright": "© 2024 MyAwesomeBrand. All rights reserved.",
+      "footer_privacy": "Privacy Policy",
+      "footer_terms": "Terms of Service"
+    }
+  }
+}

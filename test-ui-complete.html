@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SiteClone Wizard - Complete Test UI</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 2.5em;
+      }
+
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 1.1em;
+      }
+
+      .form-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .form-section h2 {
+        color: #444;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+        font-size: 0.9em;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #4caf50;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .color-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .color-picker {
+        width: 50px;
+        height: 40px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .color-input {
+        flex: 1;
+      }
+
+      .accordion {
+        margin-top: 20px;
+      }
+
+      .accordion-header {
+        background: #e8f4f8;
+        padding: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.3s;
+      }
+
+      .accordion-header:hover {
+        background: #d8e8f0;
+      }
+
+      .accordion-content {
+        display: none;
+        padding: 20px 0;
+      }
+
+      .accordion-content.active {
+        display: block;
+      }
+
+      .button {
+        background: #4caf50;
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.3s;
+      }
+
+      .button:hover {
+        background: #45a049;
+      }
+
+      .button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .result {
+        margin-top: 30px;
+        padding: 20px;
+        background: #e8f8e8;
+        border: 2px solid #4caf50;
+        border-radius: 10px;
+        display: none;
+      }
+
+      .result.show {
+        display: block;
+      }
+
+      .result h3 {
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+
+      .result-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .result-button {
+        flex: 1;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.3s;
+      }
+
+      .result-button:hover {
+        opacity: 0.9;
+      }
+
+      .preview-button {
+        background: #2196f3;
+        color: white;
+      }
+
+      .download-button {
+        background: #ff9800;
+        color: white;
+      }
+
+      .error {
+        margin-top: 20px;
+        padding: 15px;
+        background: #ffebee;
+        border: 2px solid #f44336;
+        border-radius: 8px;
+        color: #c62828;
+        display: none;
+      }
+
+      .error.show {
+        display: block;
+      }
+
+      .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+      }
+
+      .info-box h4 {
+        color: #1565c0;
+        margin-bottom: 5px;
+      }
+
+      .info-box p {
+        color: #555;
+        font-size: 0.9em;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 SiteClone Wizard</h1>
+      <p class="subtitle">
+        Clone any website with your own branding - preserving design, removing proprietary content
+      </p>
+
+      <div class="info-box">
+        <h4>✨ What's New</h4>
+        <p>
+          • Automatically removes proprietary content (addresses, phones, videos)<br />
+          • Replaces with your brand information<br />
+          • Preserves design and layout perfectly<br />
+          • Adds placeholder images for easy customization
+        </p>
+      </div>
+
+      <form id="cloneForm">
+        <div class="form-group">
+          <label for="targetUrl">Website URL to Clone *</label>
+          <input
+            type="url"
+            id="targetUrl"
+            name="targetUrl"
+            placeholder="https://example.com"
+            required
+          />
+        </div>
+
+        <div class="form-section">
+          <h2>🏢 Basic Information</h2>
+          <div class="grid">
+            <div class="form-group">
+              <label for="brandName">Brand Name *</label>
+              <input
+                type="text"
+                id="brandName"
+                name="brandName"
+                placeholder="Your Company Name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="tagline">Tagline</label>
+              <input type="text" id="tagline" name="tagline" placeholder="Your inspiring tagline" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>📞 Contact Information</h2>
+          <div class="grid">
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" />
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="info@yourcompany.com" />
+            </div>
+          </div>
+
+          <h3 style="margin: 15px 0 10px 0; font-size: 1.1em">📍 Business Address</h3>
+          <div class="grid">
+            <div class="form-group" style="grid-column: 1 / -1">
+              <label for="street">Street Address</label>
+              <input type="text" id="street" name="street" placeholder="123 Main Street" />
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" placeholder="Springfield" />
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" id="state" name="state" placeholder="IL" maxlength="2" />
+            </div>
+            <div class="form-group">
+              <label for="zip">ZIP Code</label>
+              <input type="text" id="zip" name="zip" placeholder="62701" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>🎨 Brand Colors</h2>
+          <div class="grid">
+            <div class="form-group">
+              <label for="primaryColor">Primary Color</label>
+              <div class="color-group">
+                <input type="color" id="primaryColorPicker" class="color-picker" value="#2563EB" />
+                <input
+                  type="text"
+                  id="primaryColor"
+                  class="color-input"
+                  value="#2563EB"
+                  pattern="^#[0-9A-Fa-f]{6}$"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="secondaryColor">Secondary Color</label>
+              <div class="color-group">
+                <input
+                  type="color"
+                  id="secondaryColorPicker"
+                  class="color-picker"
+                  value="#DC2626"
+                />
+                <input
+                  type="text"
+                  id="secondaryColor"
+                  class="color-input"
+                  value="#DC2626"
+                  pattern="^#[0-9A-Fa-f]{6}$"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="accentColor">Accent Color</label>
+              <div class="color-group">
+                <input type="color" id="accentColorPicker" class="color-picker" value="#10B981" />
+                <input
+                  type="text"
+                  id="accentColor"
+                  class="color-input"
+                  value="#10B981"
+                  pattern="^#[0-9A-Fa-f]{6}$"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>⚙️ Advanced Options</span>
+            <span>▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="form-section">
+              <h2>🌐 Social Media Links</h2>
+              <div class="grid">
+                <div class="form-group">
+                  <label for="facebook">Facebook</label>
+                  <input
+                    type="url"
+                    id="facebook"
+                    name="facebook"
+                    placeholder="https://facebook.com/yourpage"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="twitter">Twitter/X</label>
+                  <input
+                    type="url"
+                    id="twitter"
+                    name="twitter"
+                    placeholder="https://twitter.com/yourhandle"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="instagram">Instagram</label>
+                  <input
+                    type="url"
+                    id="instagram"
+                    name="instagram"
+                    placeholder="https://instagram.com/yourprofile"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="linkedin">LinkedIn</label>
+                  <input
+                    type="url"
+                    id="linkedin"
+                    name="linkedin"
+                    placeholder="https://linkedin.com/company/yourcompany"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h2>🔤 Typography</h2>
+              <div class="form-group">
+                <label for="fontFamily">Font Family</label>
+                <select id="fontFamily" name="fontFamily">
+                  <option value="Inter">Inter</option>
+                  <option value="Roboto">Roboto</option>
+                  <option value="Open Sans">Open Sans</option>
+                  <option value="Lato">Lato</option>
+                  <option value="Montserrat">Montserrat</option>
+                  <option value="Poppins" selected>Poppins</option>
+                  <option value="Playfair Display">Playfair Display</option>
+                  <option value="Raleway">Raleway</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h2>📝 Content</h2>
+              <div class="form-group">
+                <label for="heroTitle">Hero Title</label>
+                <input
+                  type="text"
+                  id="heroTitle"
+                  name="heroTitle"
+                  placeholder="Welcome to Your Business"
+                />
+              </div>
+              <div class="form-group">
+                <label for="heroSubtitle">Hero Subtitle</label>
+                <textarea
+                  id="heroSubtitle"
+                  name="heroSubtitle"
+                  rows="2"
+                  placeholder="A brief description of what makes your business special"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="button" id="submitButton">🚀 Start Cloning</button>
+      </form>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; color: #666">Cloning website... This may take a moment.</p>
+      </div>
+
+      <div class="error" id="error"></div>
+
+      <div class="result" id="result">
+        <h3>✅ Clone Successful!</h3>
+        <p>Your website has been cloned with your branding.</p>
+        <p style="margin-top: 10px"><strong>Output ID:</strong> <code id="outputId"></code></p>
+        <div class="result-buttons">
+          <button class="result-button preview-button" onclick="launchPreview()">
+            👁️ Launch Preview
+          </button>
+          <button class="result-button download-button" onclick="downloadProject()">
+            📥 Download Project
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentOutputId = null
+      const baseUrl = 'http://localhost:3000'
+
+      // Color picker sync
+      document.querySelectorAll('.color-picker').forEach((picker) => {
+        const input = picker.nextElementSibling
+        picker.addEventListener('change', () => {
+          input.value = picker.value
+        })
+        input.addEventListener('change', () => {
+          picker.value = input.value
+        })
+      })
+
+      // Accordion toggle
+      function toggleAccordion(header) {
+        const content = header.nextElementSibling
+        const arrow = header.querySelector('span:last-child')
+        content.classList.toggle('active')
+        arrow.textContent = content.classList.contains('active') ? '▲' : '▼'
+      }
+
+      // Form submission
+      document.getElementById('cloneForm').addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.target)
+        const targetUrl = formData.get('targetUrl')
+
+        const brandConfig = {
+          name: formData.get('brandName'),
+          tagline: formData.get('tagline'),
+          colors: {
+            primary: formData.get('primaryColor'),
+            secondary: formData.get('secondaryColor'),
+            accent: formData.get('accentColor'),
+          },
+          typography: {
+            fontFamily: formData.get('fontFamily'),
+          },
+          contact: {
+            phone: formData.get('phone'),
+            email: formData.get('email'),
+            address: {
+              street: formData.get('street'),
+              city: formData.get('city'),
+              state: formData.get('state'),
+              zip: formData.get('zip'),
+            },
+          },
+          social: {
+            facebook: formData.get('facebook'),
+            twitter: formData.get('twitter'),
+            instagram: formData.get('instagram'),
+            linkedin: formData.get('linkedin'),
+          },
+          content: {
+            heroTitle: formData.get('heroTitle'),
+            heroSubtitle: formData.get('heroSubtitle'),
+          },
+        }
+
+        // Hide previous results
+        document.getElementById('result').classList.remove('show')
+        document.getElementById('error').classList.remove('show')
+
+        // Show loading
+        document.getElementById('loading').classList.add('show')
+        document.getElementById('submitButton').disabled = true
+
+        try {
+          const response = await fetch(`${baseUrl}/api/clone`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ targetUrl, brandConfig }),
+          })
+
+          const data = await response.json()
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Clone failed')
+          }
+
+          currentOutputId = data.outputId
+          document.getElementById('outputId').textContent = currentOutputId
+          document.getElementById('result').classList.add('show')
+        } catch (error) {
+          document.getElementById('error').textContent = error.message
+          document.getElementById('error').classList.add('show')
+        } finally {
+          document.getElementById('loading').classList.remove('show')
+          document.getElementById('submitButton').disabled = false
+        }
+      })
+
+      async function launchPreview() {
+        if (!currentOutputId) return
+
+        try {
+          const response = await fetch(`${baseUrl}/api/launch/${currentOutputId}`, {
+            method: 'POST',
+          })
+
+          const data = await response.json()
+
+          if (response.ok && data.url) {
+            window.open(data.url, '_blank')
+          } else {
+            alert('Failed to launch preview: ' + (data.error || 'Unknown error'))
+          }
+        } catch (error) {
+          alert('Failed to launch preview: ' + error.message)
+        }
+      }
+
+      function downloadProject() {
+        if (!currentOutputId) return
+        window.location.href = `${baseUrl}/api/download/${currentOutputId}`
+      }
+
+      // Pre-fill form for testing
+      document.getElementById('targetUrl').value = 'https://www.autotrademark.com/'
+      document.getElementById('brandName').value = 'MyBrand Auto Sales'
+      document.getElementById('tagline').value = 'Your trusted automotive partner'
+      document.getElementById('phone').value = '(555) 123-4567'
+      document.getElementById('email').value = 'info@mybrandauto.com'
+      document.getElementById('street').value = '123 Main Street'
+      document.getElementById('city').value = 'Springfield'
+      document.getElementById('state').value = 'IL'
+      document.getElementById('zip').value = '62701'
+    </script>
+  </body>
+</html>

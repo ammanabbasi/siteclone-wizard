@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Website Builder - SiteClone Wizard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        font-size: 3em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.3em;
+        opacity: 0.9;
+      }
+
+      .ai-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        margin-top: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .builder-container {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .demo-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .demo-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        cursor: pointer;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        text-align: center;
+      }
+
+      .demo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .demo-card h3 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+      }
+
+      .demo-card p {
+        opacity: 0.9;
+        font-size: 0.95em;
+      }
+
+      .demo-card .icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+      }
+
+      .form-section {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+      }
+
+      .form-section h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .color-inputs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+      }
+
+      .color-input-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      input[type='color'] {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .generate-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 18px 50px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2em;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: transform 0.3s;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .generate-button:hover {
+        transform: translateY(-2px);
+      }
+
+      .generate-button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 40px;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .result {
+        display: none;
+        background: #e8f8e8;
+        padding: 30px;
+        border-radius: 15px;
+        margin-top: 30px;
+        border: 2px solid #4caf50;
+      }
+
+      .result.show {
+        display: block;
+      }
+
+      .preview-frame {
+        width: 100%;
+        height: 600px;
+        border: none;
+        border-radius: 10px;
+        margin-top: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #666;
+      }
+
+      .feature-item .check {
+        color: #4caf50;
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🚀 AI Website Builder</h1>
+        <p>Create a complete professional website in seconds with AI</p>
+        <div class="ai-badge">✨ Powered by Advanced AI</div>
+      </div>
+
+      <div class="builder-container">
+        <div class="demo-cards">
+          <div class="demo-card" onclick="loadDemo('automotive')">
+            <div class="icon">🚗</div>
+            <h3>Car Dealership</h3>
+            <p>Perfect for automotive businesses with inventory showcase</p>
+          </div>
+          <div class="demo-card" onclick="loadDemo('healthcare')">
+            <div class="icon">🏥</div>
+            <h3>Healthcare Clinic</h3>
+            <p>Professional medical practice website with appointments</p>
+          </div>
+          <div class="demo-card" onclick="loadDemo('technology')">
+            <div class="icon">💻</div>
+            <h3>Tech Startup</h3>
+            <p>Modern tech company with product features</p>
+          </div>
+          <div class="demo-card" onclick="loadDemo('retail')">
+            <div class="icon">🛍️</div>
+            <h3>Retail Store</h3>
+            <p>E-commerce ready retail business website</p>
+          </div>
+        </div>
+
+        <form id="builderForm">
+          <div class="form-section">
+            <h2>🏢 Business Information</h2>
+            <div class="form-group">
+              <label for="brandName">Business Name *</label>
+              <input
+                type="text"
+                id="brandName"
+                name="brandName"
+                placeholder="Your Business Name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="tagline">Tagline</label>
+              <input type="text" id="tagline" name="tagline" placeholder="Your inspiring tagline" />
+            </div>
+            <div class="form-group">
+              <label for="industry">Industry</label>
+              <select id="industry" name="industry">
+                <option value="automotive">Automotive</option>
+                <option value="healthcare">Healthcare</option>
+                <option value="technology">Technology</option>
+                <option value="finance">Finance</option>
+                <option value="retail">Retail</option>
+                <option value="education">Education</option>
+                <option value="real-estate">Real Estate</option>
+                <option value="restaurant">Restaurant</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>🎨 Brand Colors</h2>
+            <p style="margin-bottom: 20px; color: #666">
+              AI will suggest colors based on your industry, or choose your own:
+            </p>
+            <div class="color-inputs">
+              <div class="color-input-group">
+                <input type="color" id="primaryColor" name="primaryColor" value="#667eea" />
+                <label for="primaryColor">Primary</label>
+              </div>
+              <div class="color-input-group">
+                <input type="color" id="secondaryColor" name="secondaryColor" value="#764ba2" />
+                <label for="secondaryColor">Secondary</label>
+              </div>
+              <div class="color-input-group">
+                <input type="color" id="accentColor" name="accentColor" value="#10B981" />
+                <label for="accentColor">Accent</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>📞 Contact Information</h2>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="info@yourbusiness.com" />
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="123 Main St, City, ST 12345"
+              />
+            </div>
+          </div>
+
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <span>AI-generated professional layout</span>
+            </div>
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <span>Industry-specific sections</span>
+            </div>
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <span>SEO-optimized content</span>
+            </div>
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <span>Mobile responsive design</span>
+            </div>
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <span>Custom brand colors</span>
+            </div>
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <span>Ready to deploy</span>
+            </div>
+          </div>
+
+          <button type="submit" class="generate-button" style="margin-top: 30px">
+            🤖 Generate Professional Website with AI
+          </button>
+        </form>
+
+        <div class="loading" id="loading">
+          <h3>🤖 AI is building your professional website...</h3>
+          <p style="margin-top: 20px; color: #666">This usually takes 10-15 seconds</p>
+        </div>
+
+        <div class="result" id="result">
+          <h3 style="color: #4caf50; margin-bottom: 20px">
+            ✅ Your AI-Generated Website is Ready!
+          </h3>
+          <p>Your professional website has been created with:</p>
+          <ul style="margin: 20px 0; padding-left: 20px; color: #666">
+            <li>Custom hero section with AI-generated content</li>
+            <li>About us section tailored to your industry</li>
+            <li>Services showcase</li>
+            <li>Customer testimonials</li>
+            <li>Contact form and information</li>
+            <li>Professional footer</li>
+          </ul>
+          <div style="display: flex; gap: 15px; margin-top: 20px">
+            <button
+              id="previewButton"
+              style="
+                flex: 1;
+                padding: 12px;
+                background: #4caf50;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+              "
+            >
+              👁️ Preview Website
+            </button>
+            <button
+              id="downloadButton"
+              style="
+                flex: 1;
+                padding: 12px;
+                background: #2196f3;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+              "
+            >
+              📥 Download Code
+            </button>
+          </div>
+          <iframe id="previewFrame" class="preview-frame" style="display: none"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const baseUrl = 'http://localhost:3001' // Note: using port 3001 as shown in your terminal
+      let currentOutputId = null
+
+      // Demo configurations
+      const demos = {
+        automotive: {
+          brandName: 'Premium Auto Sales',
+          tagline: 'Your trusted partner in finding the perfect vehicle',
+          industry: 'automotive',
+          phone: '(555) 123-4567',
+          email: 'sales@premiumauto.com',
+          address: '123 Auto Plaza, Detroit, MI 48201',
+        },
+        healthcare: {
+          brandName: 'Wellness Medical Center',
+          tagline: 'Caring for your health, every step of the way',
+          industry: 'healthcare',
+          phone: '(555) 234-5678',
+          email: 'info@wellnessmedical.com',
+          address: '456 Health Ave, Boston, MA 02108',
+        },
+        technology: {
+          brandName: 'TechVision Solutions',
+          tagline: 'Innovating tomorrow, today',
+          industry: 'technology',
+          phone: '(555) 345-6789',
+          email: 'hello@techvision.com',
+          address: '789 Innovation Blvd, San Francisco, CA 94105',
+        },
+        retail: {
+          brandName: 'StyleHub Boutique',
+          tagline: 'Where fashion meets affordability',
+          industry: 'retail',
+          phone: '(555) 456-7890',
+          email: 'shop@stylehub.com',
+          address: '321 Fashion St, New York, NY 10001',
+        },
+      }
+
+      function loadDemo(type) {
+        const demo = demos[type]
+        document.getElementById('brandName').value = demo.brandName
+        document.getElementById('tagline').value = demo.tagline
+        document.getElementById('industry').value = demo.industry
+        document.getElementById('phone').value = demo.phone
+        document.getElementById('email').value = demo.email
+        document.getElementById('address').value = demo.address
+
+        // Scroll to form
+        document.getElementById('builderForm').scrollIntoView({ behavior: 'smooth' })
+      }
+
+      document.getElementById('builderForm').addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.target)
+
+        // Parse address
+        const addressParts = formData
+          .get('address')
+          .split(',')
+          .map((s) => s.trim())
+        const cityState = addressParts[1]?.split(' ') || []
+
+        const brandConfig = {
+          name: formData.get('brandName'),
+          tagline: formData.get('tagline'),
+          industry: formData.get('industry'),
+          colors: {
+            primary: formData.get('primaryColor'),
+            secondary: formData.get('secondaryColor'),
+            accent: formData.get('accentColor'),
+          },
+          typography: {
+            fontFamily: 'Inter',
+          },
+          contact: {
+            phone: formData.get('phone'),
+            email: formData.get('email'),
+            address: {
+              street: addressParts[0] || '',
+              city: cityState[0] || '',
+              state: cityState[1] || '',
+              zip: cityState[2] || '',
+            },
+          },
+        }
+
+        // Hide results and show loading
+        document.getElementById('result').classList.remove('show')
+        document.getElementById('loading').classList.add('show')
+        document.querySelector('.generate-button').disabled = true
+
+        try {
+          const response = await fetch(`${baseUrl}/api/ai-build`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ brandConfig }),
+          })
+
+          const data = await response.json()
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Generation failed')
+          }
+
+          currentOutputId = data.outputId
+
+          // Show result
+          document.getElementById('loading').classList.remove('show')
+          document.getElementById('result').classList.add('show')
+
+          // Setup preview button
+          document.getElementById('previewButton').onclick = () => {
+            const frame = document.getElementById('previewFrame')
+            frame.src = `${baseUrl}/preview/${currentOutputId}`
+            frame.style.display = 'block'
+          }
+
+          // Setup download button
+          document.getElementById('downloadButton').onclick = () => {
+            window.open(`${baseUrl}/api/download/${currentOutputId}`, '_blank')
+          }
+        } catch (error) {
+          alert(`Error: ${error.message}`)
+          console.error(error)
+        } finally {
+          document.getElementById('loading').classList.remove('show')
+          document.querySelector('.generate-button').disabled = false
+        }
+      })
+    </script>
+  </body>
+</html>

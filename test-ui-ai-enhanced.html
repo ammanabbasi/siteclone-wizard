@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SiteClone Wizard - AI Enhanced</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 2.5em;
+      }
+
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 1.1em;
+      }
+
+      .ai-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        margin-left: 10px;
+        font-weight: 600;
+      }
+
+      .form-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .form-section h2 {
+        color: #444;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+        font-size: 0.9em;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .ai-feature {
+        background: #f0f4ff;
+        border: 2px solid #667eea;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+
+      .ai-feature h3 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      .ai-button {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+        margin-top: 10px;
+      }
+
+      .ai-button:hover {
+        transform: translateY(-2px);
+      }
+
+      .button {
+        background: #4caf50;
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.3s;
+      }
+
+      .button:hover {
+        background: #45a049;
+      }
+
+      .button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0;
+      }
+
+      .checkbox-group input[type='checkbox'] {
+        width: auto;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .color-suggestion {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        align-items: center;
+      }
+
+      .color-preview {
+        width: 30px;
+        height: 30px;
+        border-radius: 6px;
+        border: 2px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 SiteClone Wizard <span class="ai-badge">AI Enhanced</span></h1>
+      <p class="subtitle">
+        Clone any website with AI-powered content generation and smart brand customization
+      </p>
+
+      <form id="cloneForm">
+        <div class="form-group">
+          <label for="targetUrl">Website URL to Clone *</label>
+          <input
+            type="url"
+            id="targetUrl"
+            name="targetUrl"
+            placeholder="https://example.com"
+            required
+          />
+        </div>
+
+        <div class="form-section">
+          <h2>🏢 Basic Information</h2>
+          <div class="grid">
+            <div class="form-group">
+              <label for="brandName">Brand Name *</label>
+              <input
+                type="text"
+                id="brandName"
+                name="brandName"
+                placeholder="Your Company Name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="industry">Industry</label>
+              <select id="industry" name="industry">
+                <option value="">Select Industry</option>
+                <option value="automotive">Automotive</option>
+                <option value="technology">Technology</option>
+                <option value="healthcare">Healthcare</option>
+                <option value="finance">Finance</option>
+                <option value="retail">Retail</option>
+                <option value="real-estate">Real Estate</option>
+                <option value="education">Education</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="tagline">Tagline</label>
+            <input type="text" id="tagline" name="tagline" placeholder="Your inspiring tagline" />
+          </div>
+        </div>
+
+        <div class="ai-feature">
+          <h3>🎨 AI Color Suggestions</h3>
+          <p>Let AI suggest the perfect color scheme based on your brand and industry</p>
+          <button type="button" class="ai-button" onclick="suggestColors()">
+            Generate Color Scheme
+          </button>
+          <div id="colorSuggestions" class="color-suggestion" style="display: none">
+            <div class="color-preview" id="primaryPreview"></div>
+            <div class="color-preview" id="secondaryPreview"></div>
+            <div class="color-preview" id="accentPreview"></div>
+            <span>AI suggested colors</span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>📞 Contact Information</h2>
+          <div class="grid">
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" />
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="info@yourcompany.com" />
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-feature">
+          <h3>🤖 AI Content Options</h3>
+          <div class="checkbox-group">
+            <input type="checkbox" id="aiContent" name="aiContent" checked />
+            <label for="aiContent">Generate intelligent content replacements</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="aiSeo" name="aiSeo" checked />
+            <label for="aiSeo">Optimize SEO with AI</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="aiInventory" name="aiInventory" checked />
+            <label for="aiInventory">Generate AI car descriptions (for dealerships)</label>
+          </div>
+        </div>
+
+        <button type="submit" class="button" id="submitButton">🚀 Start AI-Powered Cloning</button>
+      </form>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; color: #666">AI is cloning and enhancing your website...</p>
+      </div>
+
+      <div
+        class="error"
+        id="error"
+        style="
+          display: none;
+          margin-top: 20px;
+          padding: 15px;
+          background: #ffebee;
+          border: 2px solid #f44336;
+          border-radius: 8px;
+          color: #c62828;
+        "
+      ></div>
+
+      <div
+        class="result"
+        id="result"
+        style="
+          display: none;
+          margin-top: 30px;
+          padding: 20px;
+          background: #e8f8e8;
+          border: 2px solid #4caf50;
+          border-radius: 10px;
+        "
+      >
+        <h3 style="color: #2e7d32; margin-bottom: 10px">✅ AI Clone Successful!</h3>
+        <p>Your website has been cloned and enhanced with AI-generated content.</p>
+        <p style="margin-top: 10px"><strong>Output ID:</strong> <code id="outputId"></code></p>
+      </div>
+    </div>
+
+    <script>
+      let currentOutputId = null
+      const baseUrl = 'http://localhost:3000'
+
+      // Pre-fill for testing
+      document.getElementById('targetUrl').value = 'https://www.autotrademark.com/'
+      document.getElementById('brandName').value = 'SmartAuto Dealership'
+      document.getElementById('industry').value = 'automotive'
+      document.getElementById('tagline').value = 'Drive Your Dreams with AI'
+      document.getElementById('phone').value = '(555) 123-4567'
+      document.getElementById('email').value = 'info@smartauto.com'
+
+      async function suggestColors() {
+        const brandName = document.getElementById('brandName').value
+        const industry = document.getElementById('industry').value
+
+        if (!brandName) {
+          alert('Please enter a brand name first')
+          return
+        }
+
+        try {
+          const response = await fetch(`${baseUrl}/api/ai-enhance`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'suggest-colors',
+              brandConfig: { name: brandName },
+              industry,
+            }),
+          })
+
+          const data = await response.json()
+
+          if (data.success && data.colors) {
+            document.getElementById('primaryPreview').style.backgroundColor = data.colors.primary
+            document.getElementById('secondaryPreview').style.backgroundColor =
+              data.colors.secondary
+            document.getElementById('accentPreview').style.backgroundColor = data.colors.accent
+            document.getElementById('colorSuggestions').style.display = 'flex'
+
+            // Update the form (you would add color inputs to the form)
+            console.log('AI suggested colors:', data.colors)
+          }
+        } catch (error) {
+          console.error('Color suggestion failed:', error)
+          alert('Failed to generate color suggestions')
+        }
+      }
+
+      document.getElementById('cloneForm').addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.target)
+        const targetUrl = formData.get('targetUrl')
+
+        const brandConfig = {
+          name: formData.get('brandName'),
+          tagline: formData.get('tagline'),
+          industry: formData.get('industry'),
+          colors: {
+            primary: '#667eea', // You'd get these from color inputs
+            secondary: '#764ba2',
+            accent: '#10B981',
+          },
+          typography: {
+            fontFamily: 'Inter',
+          },
+          contact: {
+            phone: formData.get('phone'),
+            email: formData.get('email'),
+          },
+          ai: {
+            enableContent: formData.get('aiContent') === 'on',
+            enableSeo: formData.get('aiSeo') === 'on',
+            enableInventory: formData.get('aiInventory') === 'on',
+          },
+        }
+
+        // Hide previous results
+        document.getElementById('result').style.display = 'none'
+        document.getElementById('error').style.display = 'none'
+
+        // Show loading
+        document.getElementById('loading').classList.add('show')
+        document.getElementById('submitButton').disabled = true
+
+        try {
+          const response = await fetch(`${baseUrl}/api/clone`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ targetUrl, brandConfig }),
+          })
+
+          const data = await response.json()
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Clone failed')
+          }
+
+          currentOutputId = data.outputId
+          document.getElementById('outputId').textContent = currentOutputId
+          document.getElementById('result').style.display = 'block'
+        } catch (error) {
+          document.getElementById('error').textContent = error.message
+          document.getElementById('error').style.display = 'block'
+        } finally {
+          document.getElementById('loading').classList.remove('show')
+          document.getElementById('submitButton').disabled = false
+        }
+      })
+    </script>
+  </body>
+</html>
