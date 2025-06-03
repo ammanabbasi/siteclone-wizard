@@ -1,0 +1,178 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement for SiteClone Wizard
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! Your ideas help make SiteClone Wizard better for everyone.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm the following before submitting your feature request
+      options:
+        - label: I have searched existing issues and discussions to ensure this feature hasn't been requested before
+          required: true
+        - label: I have checked the roadmap to see if this feature is already planned
+          required: true
+        - label: This feature aligns with the project's goals for dealership website generation
+          required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Summary
+      description: A brief, clear summary of the feature you'd like to see added
+      placeholder: Add a short description of the feature...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: What problem does this feature solve? What pain point are you experiencing?
+      placeholder: |
+        I'm always frustrated when...
+        Currently, users have to...
+        The main issue is...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see implemented
+      placeholder: |
+        I would like to see...
+        The feature should work by...
+        Users should be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Have you considered any alternative solutions or workarounds?
+      placeholder: |
+        Alternative approaches could be...
+        I've tried...
+        Other tools handle this by...
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: Which area of the application does this feature relate to?
+      options:
+        - AI Content Generation
+        - Web Scraping & Parsing
+        - Dealership-Specific Features
+        - User Interface & Experience
+        - Code Generation & Templates
+        - Performance & Optimization
+        - Developer Experience
+        - Testing & Quality Assurance
+        - Documentation & Tutorials
+        - Integration & APIs
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature to you?
+      options:
+        - Low (Nice to have, not urgent)
+        - Medium (Would improve workflow significantly)
+        - High (Critical for my use case)
+        - Critical (Blocking my adoption of the tool)
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case & User Story
+      description: Describe your specific use case and how this feature would help
+      placeholder: |
+        As a [type of user], I want [feature] so that [benefit/goal].
+        
+        Example scenario:
+        1. I am...
+        2. I need to...
+        3. This feature would allow me to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What would need to be true for this feature to be considered complete?
+      placeholder: |
+        - [ ] Feature should...
+        - [ ] Users should be able to...
+        - [ ] The system should...
+        - [ ] Performance should...
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Mockups or Examples
+      description: Any mockups, screenshots, or examples that illustrate the feature
+      placeholder: Drag and drop images here or describe the visual/interaction design...
+
+  - type: textarea
+    id: technical-considerations
+    attributes:
+      label: Technical Considerations
+      description: Any technical aspects, dependencies, or implementation ideas you'd like to share
+      placeholder: |
+        This might require...
+        Could integrate with...
+        Technical challenges might include...
+
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Expected Impact
+      description: What areas would this feature impact? (Check all that apply)
+      options:
+        - label: User Experience
+        - label: Performance
+        - label: Developer Experience
+        - label: Code Quality
+        - label: Security
+        - label: Accessibility
+        - label: Mobile Experience
+        - label: API/Integration
+        - label: Documentation
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution Interest
+      description: Would you be interested in contributing to this feature?
+      options:
+        - label: I would like to work on implementing this feature
+        - label: I can help with design/mockups
+        - label: I can help with testing
+        - label: I can help with documentation
+        - label: I can provide domain expertise (automotive/dealership knowledge)
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context, research, or information that would be helpful
+      placeholder: Add any other context about the feature request here... 

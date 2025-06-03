@@ -1,10 +1,32 @@
-# Auto Dealer Website Builder
+# SiteClone Wizard
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14.0+-black.svg)](https://nextjs.org/)
 
 AI-Powered Website Generator for Independent Used Car Dealerships
 
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [How It Works](#how-it-works)
+- [Quick Start](#quick-start)
+- [Project Structure](#project-structure)
+- [Generated Website Features](#generated-website-features)
+- [Configuration Options](#configuration-options)
+- [API Endpoints](#api-endpoints)
+- [Running Generated Sites](#running-generated-sites)
+- [Development](#development)
+- [Security Notes](#security-notes)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
+
 ## Overview
 
-Auto Dealer Website Builder (formerly SiteClone Wizard) is a specialized AI-powered tool that helps independent used car dealerships create professional, feature-rich websites in minutes. Instead of directly cloning websites, it uses AI to generate unique, customized dealership sites with all the features modern car buyers expect.
+SiteClone Wizard (formerly Auto Dealer Website Builder) is a specialized AI-powered tool that helps independent used car dealerships create professional, feature-rich websites in minutes. Instead of directly cloning websites, it uses AI to generate unique, customized dealership sites with all the features modern car buyers expect.
 
 ## Key Features
 
@@ -54,15 +76,16 @@ Auto Dealer Website Builder (formerly SiteClone Wizard) is a specialized AI-powe
 
 ### Prerequisites
 
-- Node.js 18+ and pnpm
-- Git (optional, for cloning)
+- Node.js 18.0 or higher
+- pnpm (recommended) or npm
+- Git
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/auto-dealer-website-builder.git
-cd auto-dealer-website-builder
+git clone https://github.com/ammanabbasi/siteclone-wizard.git
+cd siteclone-wizard
 
 # Install dependencies
 pnpm install
@@ -76,20 +99,34 @@ Visit `http://localhost:3000` to start building your dealership website.
 ## Project Structure
 
 ```
-auto-dealer-website-builder/
+siteclone-wizard/
 ├── src/
 │   ├── app/              # Next.js app directory
 │   │   ├── api/          # API routes
 │   │   │   ├── ai-build/ # Pure AI generation
-│   │   │   └── ai-inspire/ # Inspiration-based generation
+│   │   │   ├── ai-enhance/ # Content enhancement
+│   │   │   ├── ai-inspire/ # Inspiration-based generation
+│   │   │   ├── clone/    # Website cloning functionality
+│   │   │   ├── download/ # File download handling
+│   │   │   ├── launch/   # Site deployment
+│   │   │   ├── preview/  # Site preview
+│   │   │   └── test-scrape/ # Scraping utilities
+│   │   ├── debug/        # Debug interface
+│   │   ├── preview/      # Preview pages
+│   │   ├── quick-preview/ # Quick preview
+│   │   ├── test/         # Test interface
 │   │   └── page.tsx      # Main UI
+│   ├── cli/              # Command-line interface
 │   ├── components/       # React components
 │   └── lib/              # Core logic
-│       ├── used-car-dealership-builder.ts  # Dealership-specific builder
-│       ├── ai-enhancer.ts                  # AI content generation
-│       └── types.ts                        # TypeScript types
+│       ├── dealership/   # Dealership-specific builders
+│       ├── scraper/      # Web scraping utilities
+│       ├── parser/       # HTML parsing
+│       ├── generator/    # Code generation
+│       └── types.ts      # TypeScript types
 ├── output/               # Generated websites
-└── package.json
+├── tests/                # Test files
+└── docs/                 # Documentation
 ```
 
 ## Generated Website Features
@@ -184,6 +221,65 @@ npm run build
 npm start
 ```
 
+## Development
+
+### Prerequisites
+
+- Node.js 18.0 or higher
+- pnpm (recommended) or npm
+- Git
+
+### Development Setup
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run development server
+pnpm dev
+
+# Run tests
+pnpm test
+
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+
+# Lint code
+pnpm lint
+
+# Type check
+pnpm type-check
+```
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```bash
+# Optional: Configure AI services
+OPENAI_API_KEY=your_openai_api_key_here
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# Optional: Configure deployment
+VERCEL_TOKEN=your_vercel_token_here
+```
+
+### Testing
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run E2E tests with Playwright
+pnpm test:e2e
+```
+
 ## Security Notes
 
 - Generated sites have all external links disabled by default
@@ -193,15 +289,32 @@ npm start
 
 ## Contributing
 
-Contributions are welcome! Please read our contributing guidelines before submitting PRs.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Quick Contributing Steps
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
-MIT License - see LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
-For issues, questions, or feature requests, please open an issue on GitHub.
+- 📖 [Documentation](docs/)
+- 🐛 [Report Issues](https://github.com/ammanabbasi/siteclone-wizard/issues)
+- 💬 [Discussions](https://github.com/ammanabbasi/siteclone-wizard/discussions)
+- 📧 [Contact](mailto:support@example.com)
+
+## Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- Powered by [OpenAI](https://openai.com/) and [Anthropic](https://anthropic.com/)
+- UI components from [Tailwind CSS](https://tailwindcss.com/)
 
 ---
 

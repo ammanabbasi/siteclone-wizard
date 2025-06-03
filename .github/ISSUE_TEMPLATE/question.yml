@@ -1,0 +1,141 @@
+name: ❓ Question or Support
+description: Ask a question or get help with SiteClone Wizard
+title: "[Question]: "
+labels: ["question", "support"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out! We're here to help you with SiteClone Wizard.
+
+        **Before asking your question, please check:**
+        - 📖 [Documentation](https://github.com/ammanabbasi/siteclone-wizard/tree/main/docs)
+        - 🔍 [Existing issues](https://github.com/ammanabbasi/siteclone-wizard/issues) and [discussions](https://github.com/ammanabbasi/siteclone-wizard/discussions)
+        - 📋 [FAQ section](https://github.com/ammanabbasi/siteclone-wizard#faq) in the README
+
+  - type: dropdown
+    id: question-type
+    attributes:
+      label: Question Type
+      description: What type of question is this?
+      options:
+        - General Usage
+        - Installation & Setup
+        - Configuration & Settings
+        - AI Features & Customization
+        - Dealership-specific Features
+        - Web Scraping & Parsing
+        - Generated Code Issues
+        - Performance & Optimization
+        - Integration & APIs
+        - Deployment & Hosting
+        - Troubleshooting
+        - Best Practices
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: Please describe your question in detail...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context & What You're Trying to Achieve
+      description: Help us understand what you're working on and what you're trying to accomplish
+      placeholder: |
+        I'm trying to...
+        My goal is to...
+        I want to create...
+    validations:
+      required: true
+
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What Have You Tried?
+      description: What steps have you already taken? What have you researched or attempted?
+      placeholder: |
+        I have tried...
+        I looked at...
+        I searched for...
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Information
+      description: Information about your setup (if relevant to your question)
+      value: |
+        - OS: [e.g., Windows 11, macOS 14.1, Ubuntu 22.04]
+        - Node.js version: [e.g., 18.17.0]
+        - Package manager: [e.g., pnpm 8.6.0, npm 9.8.0]
+        - SiteClone Wizard version: [e.g., 1.0.0]
+        - Browser: [e.g., Chrome 115, Firefox 116] (if relevant)
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: Code Example or Configuration
+      description: If applicable, share relevant code, configuration, or error messages
+      placeholder: Paste your code or configuration here...
+      render: typescript
+
+  - type: textarea
+    id: expected-outcome
+    attributes:
+      label: Expected Outcome
+      description: What result are you hoping to achieve?
+      placeholder: I expected to...
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency Level
+      description: How urgent is this question for you?
+      options:
+        - Low (Learning/exploring)
+        - Medium (Working on project, not urgent)
+        - High (Blocking current work)
+        - Critical (Production issue)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: usage-context
+    attributes:
+      label: Usage Context
+      description: How are you using SiteClone Wizard? (Check all that apply)
+      options:
+        - label: Personal/hobby project
+        - label: Professional dealership website
+        - label: Client work
+        - label: Learning/educational purposes
+        - label: Contributing to the project
+        - label: Research/evaluation
+        - label: Testing/experimentation
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other details that might be helpful
+      placeholder: Add any other context, screenshots, or information that might help us answer your question...
+
+  - type: checkboxes
+    id: follow-up
+    attributes:
+      label: Follow-up Actions
+      description: How would you like to proceed?
+      options:
+        - label: I'm willing to test solutions or workarounds
+        - label: I can provide more information if needed
+        - label: I'd like to schedule a discussion/call if helpful
+        - label: I'm interested in contributing documentation improvements based on the answer 
