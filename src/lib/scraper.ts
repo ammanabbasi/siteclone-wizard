@@ -2,6 +2,7 @@ import { chromium, Page, Browser } from 'playwright'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import { URL } from 'url'
+import { logger } from './logger'
 
 export interface ScraperOptions {
   targetUrl: string
@@ -64,7 +65,7 @@ export class WebScraper {
         try {
           await page.close()
         } catch (error) {
-          console.warn('Failed to close page:', error)
+          logger.warn('Failed to close page:', error)
         }
       }
     }
@@ -73,7 +74,7 @@ export class WebScraper {
   private async scrapePage(page: Page, url: string, depth: number): Promise<ScrapeResult> {
     // Check if we've hit the page limit
     if (this.options.maxPages && this.pagesScraped >= this.options.maxPages) {
-      console.log(`Reached max pages limit (${this.options.maxPages})`)
+      logger.info(`Reached max pages limit (${this.options.maxPages})`)
       return {
         html: '',
         css: [],
@@ -95,12 +96,12 @@ export class WebScraper {
 
     this.visitedUrls.add(url)
     this.pagesScraped++
-    console.log(`Scraping: ${url} (depth: ${depth}, pages scraped: ${this.pagesScraped})`)
+    logger.info(`Scraping: ${url} (depth: ${depth}, pages scraped: ${this.pagesScraped})`)
 
     try {
       await page.goto(url, { waitUntil: 'networkidle' })
     } catch (error) {
-      console.error(`Failed to navigate to ${url}:`, error)
+      logger.error(`Failed to navigate to ${url}:`, error)
       throw new Error(
         `Navigation failed: ${error instanceof Error ? error.message : String(error)}`
       )
@@ -157,7 +158,7 @@ export class WebScraper {
         try {
           await this.scrapePage(page, link, depth + 1)
         } catch (error) {
-          console.warn(`Failed to scrape linked page ${link}:`, error)
+          logger.warn(`Failed to scrape linked page ${link}:`, error)
           // Continue with other links even if one fails
         }
       }
@@ -183,7 +184,7 @@ export class WebScraper {
           styles.push(`/* Stylesheet from: ${url} */\n${cssContent}`)
         }
       } catch (error) {
-        console.warn(`Failed to download stylesheet: ${url}`, error)
+        logger.warn(`Failed to download stylesheet: ${url}`, error)
       }
     }
 
@@ -262,7 +263,7 @@ export class WebScraper {
       }
       return await response.text()
     } catch (error) {
-      console.warn(`Failed to download stylesheet from ${url}:`, error)
+      logger.warn(`Failed to download stylesheet from ${url}:`, error)
       return null
     }
   }
@@ -328,16 +329,16 @@ export class WebScraper {
         if (contentLength && this.options.maxAssetSize) {
           const size = parseInt(contentLength)
           if (size > this.options.maxAssetSize) {
-            console.warn(`Asset too large (${size} bytes): ${url}`)
+            logger.warn(`Asset too large (${size} bytes): ${url}`)
             return null
           }
         }
 
         return Buffer.from(await response.arrayBuffer())
       } catch (error) {
-        console.warn(`Attempt ${i + 1} failed for ${url}:`, error)
+        logger.warn(`Attempt ${i + 1} failed for ${url}:`, error)
         if (i === maxRetries - 1) {
-          console.error(`Failed to download asset after ${maxRetries} attempts: ${url}`)
+          logger.error(`Failed to download asset after ${maxRetries} attempts: ${url}`)
           return null
         }
         // Exponential backoff
@@ -374,7 +375,7 @@ export class WebScraper {
           })
         }
       } catch (error) {
-        console.warn(`Failed to process asset: ${asset.url}`, error)
+        logger.warn(`Failed to process asset: ${asset.url}`, error)
       }
     }
 
@@ -386,7 +387,7 @@ export class WebScraper {
       try {
         await this.browser.close()
       } catch (error) {
-        console.error('Failed to close browser:', error)
+        logger.error('Failed to close browser:', error)
       } finally {
         this.browser = null
         this.visitedUrls.clear()

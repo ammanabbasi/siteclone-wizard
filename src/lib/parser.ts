@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio'
 import { ScrapeResult } from './scraper'
+import { logger } from './logger'
 
 export interface ParsedComponent {
   type: 'header' | 'nav' | 'hero' | 'section' | 'card' | 'footer' | 'other'
@@ -53,19 +54,19 @@ export class HTMLParser {
 
   private extractComponents(): ParsedComponent[] {
     const components: ParsedComponent[] = []
-    console.log('Starting component extraction...')
+    logger.info('Starting component extraction...')
 
     // Extract header
     const header = this.$('header, [role="banner"], nav:first-of-type').first()
     if (header.length) {
-      console.log('Found header component')
+      logger.info('Found header component')
       components.push(this.parseComponent(header, 'header'))
     }
 
     // Extract navigation
     const nav = this.$('nav, [role="navigation"]').not('header nav')
     nav.each((_, el) => {
-      console.log('Found nav component')
+      logger.info('Found nav component')
       components.push(this.parseComponent(this.$(el), 'nav'))
     })
 
@@ -74,7 +75,7 @@ export class HTMLParser {
       'section:first-of-type, .hero, [class*="hero"], [class*="banner"]:not(header)'
     ).first()
     if (hero.length) {
-      console.log('Found hero component')
+      logger.info('Found hero component')
       components.push(this.parseComponent(hero, 'hero'))
     }
 
@@ -83,7 +84,7 @@ export class HTMLParser {
     sections.each((i, el) => {
       if (i < 10) {
         // Limit to first 10 sections
-        console.log(`Found section ${i}`)
+        logger.info(`Found section ${i}`)
         components.push(this.parseComponent(this.$(el), 'section'))
       }
     })
@@ -93,7 +94,7 @@ export class HTMLParser {
     cards.each((i, el) => {
       if (i < 5) {
         // Limit to first 5 cards
-        console.log(`Found card ${i}`)
+        logger.info(`Found card ${i}`)
         components.push(this.parseComponent(this.$(el), 'card'))
       }
     })
@@ -101,13 +102,13 @@ export class HTMLParser {
     // Extract footer
     const footer = this.$('footer, [role="contentinfo"]').last()
     if (footer.length) {
-      console.log('Found footer component')
+      logger.info('Found footer component')
       components.push(this.parseComponent(footer, 'footer'))
     }
 
     // Fallback: if no components found, extract main content areas
     if (components.length === 0) {
-      console.log('No standard components found, using fallback extraction')
+      logger.info('No standard components found, using fallback extraction')
 
       // Try to find any major content blocks
       const mainBlocks = this.$('main, #main, .main, [role="main"], body > div').slice(0, 5)
@@ -115,14 +116,14 @@ export class HTMLParser {
         const $el = this.$(el)
         if ($el.text().trim().length > 50) {
           // Only include blocks with substantial content
-          console.log(`Found fallback block ${i}`)
+          logger.info(`Found fallback block ${i}`)
           components.push(this.parseComponent($el, 'other'))
         }
       })
 
       // If still no components, extract body content
       if (components.length === 0) {
-        console.log('Extracting entire body as fallback')
+        logger.info('Extracting entire body as fallback')
         const body = this.$('body')
         if (body.length) {
           components.push(this.parseComponent(body, 'other'))
@@ -130,7 +131,7 @@ export class HTMLParser {
       }
     }
 
-    console.log(`Total components extracted: ${components.length}`)
+    logger.info(`Total components extracted: ${components.length}`)
     return components
   }
 

@@ -1,5 +1,6 @@
 import OpenAI from 'openai'
 import { BrandConfig } from './types'
+import { logger } from './logger'
 
 export interface AIEnhancementOptions {
   brandConfig: BrandConfig
@@ -23,7 +24,7 @@ export class AIContentEnhancer {
 
   async enhanceContent(options: AIEnhancementOptions): Promise<string> {
     if (!this.openai) {
-      console.warn('OpenAI not configured, returning default content')
+      logger.warn('OpenAI not configured, returning default content')
       return this.getDefaultContent(options)
     }
 
@@ -49,7 +50,7 @@ export class AIContentEnhancer {
 
       return completion.choices[0]?.message?.content || this.getDefaultContent(options)
     } catch (error) {
-      console.error('AI content generation failed:', error)
+      logger.error('AI content generation failed:', error)
       return this.getDefaultContent(options)
     }
   }
@@ -93,7 +94,7 @@ export class AIContentEnhancer {
         accent: colors.accent || '#10B981',
       }
     } catch (error) {
-      console.error('AI color suggestion failed:', error)
+      logger.error('AI color suggestion failed:', error)
       return this.getDefaultColors(industry)
     }
   }
@@ -160,7 +161,7 @@ export class AIContentEnhancer {
         }
       }
     } catch (error) {
-      console.error('SEO generation error:', error)
+      logger.error('SEO generation error:', error)
     }
 
     // Return default SEO content
@@ -209,7 +210,7 @@ export class AIContentEnhancer {
         `${year} ${make} ${model} - Quality pre-owned vehicle.`
       )
     } catch (error) {
-      console.error('AI inventory description failed:', error)
+      logger.error('AI inventory description failed:', error)
       return `${year} ${make} ${model} - Quality pre-owned vehicle in excellent condition.`
     }
   }

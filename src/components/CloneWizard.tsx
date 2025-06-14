@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { BrandConfig } from '@/lib/types'
+import { logger } from '@/lib/logger'
 
 // URL validation helper
 function isValidUrl(urlString: string): boolean {
@@ -19,7 +20,7 @@ function isValidHexColor(color: string): boolean {
 }
 
 export default function CloneWizard() {
-  console.log('CloneWizard component rendering') // Debug log
+  logger.debug('CloneWizard component rendering')
 
   const [targetUrl, setTargetUrl] = useState('')
   const [urlError, setUrlError] = useState<string | null>(null)
@@ -141,7 +142,7 @@ export default function CloneWizard() {
         throw new Error(data.error || 'Unknown error occurred')
       }
     } catch (error) {
-      console.error('Error:', error)
+      logger.error('Error:', error)
       setError(error instanceof Error ? error.message : 'An unknown error occurred')
     } finally {
       setIsProcessing(false)
@@ -187,7 +188,7 @@ export default function CloneWizard() {
     // Store the URL value before any async operations
     const urlToClone = targetUrl
 
-    console.log('Submitting form with:', { targetUrl: urlToClone, brandConfig })
+    logger.info('Submitting form with:', { targetUrl: urlToClone, brandConfig })
 
     try {
       const response = await fetch('/api/ai-inspire', {
@@ -199,10 +200,10 @@ export default function CloneWizard() {
         }),
       })
 
-      console.log('Response status:', response.status)
+      logger.info('Response status:', response.status)
 
       const data = await response.json()
-      console.log('Response data:', data)
+      logger.info('Response data:', data)
 
       if (!response.ok) {
         throw new Error(data.error || `HTTP error! status: ${response.status}`)
@@ -215,7 +216,7 @@ export default function CloneWizard() {
         throw new Error(data.error || 'Unknown error occurred')
       }
     } catch (error) {
-      console.error('Error:', error)
+      logger.error('Error:', error)
       setError(error instanceof Error ? error.message : 'An unknown error occurred')
     } finally {
       setIsProcessing(false)
@@ -247,7 +248,7 @@ export default function CloneWizard() {
         window.open(data.url, '_blank')
       }, 2000)
     } catch (error) {
-      console.error('Launch error:', error)
+      logger.error('Launch error:', error)
       setError(error instanceof Error ? error.message : 'Failed to launch preview')
       setLaunchStatus('error')
     }
