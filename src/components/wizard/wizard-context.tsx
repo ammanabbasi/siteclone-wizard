@@ -8,6 +8,15 @@ import { api } from '../../lib/trpc';
 import { logger } from '../../lib/logger';
 import type { UseFormReturn } from 'react-hook-form';
 
+// Helper function to safely log errors
+const logError = (message: string, error: unknown) => {
+  if (error instanceof Error) {
+    logger.error(message, error);
+  } else {
+    logger.error(message, String(error));
+  }
+};
+
 // Form schema for all wizard steps
 const wizardFormSchema = z.object({
   // Step 1: Dealer Info
@@ -164,7 +173,7 @@ export function WizardProvider({ children, initialStep = 1 }: WizardProviderProp
           localStorage.setItem('wizardSessionId', session.id);
         }
       } catch (error) {
-        logger.error('Failed to initialize wizard session:', error);
+        logError('Failed to initialize wizard session:', error);
       } finally {
         setIsLoading(false);
       }
@@ -197,7 +206,7 @@ export function WizardProvider({ children, initialStep = 1 }: WizardProviderProp
         formData,
       });
     } catch (error) {
-      logger.error('Failed to save wizard progress:', error);
+      logError('Failed to save wizard progress:', error);
     }
   };
 

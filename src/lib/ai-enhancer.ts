@@ -2,6 +2,15 @@ import OpenAI from 'openai'
 import { BrandConfig } from './types'
 import { logger } from './logger'
 
+// Helper function to safely log errors
+const logError = (message: string, error: unknown) => {
+  if (error instanceof Error) {
+    logger.error(message, error);
+  } else {
+    logger.error(message, String(error));
+  }
+};
+
 export interface AIEnhancementOptions {
   brandConfig: BrandConfig
   originalContent: string
@@ -50,7 +59,7 @@ export class AIContentEnhancer {
 
       return completion.choices[0]?.message?.content || this.getDefaultContent(options)
     } catch (error) {
-      logger.error('AI content generation failed:', error)
+      logError('AI content generation failed:', error)
       return this.getDefaultContent(options)
     }
   }
@@ -94,7 +103,7 @@ export class AIContentEnhancer {
         accent: colors.accent || '#10B981',
       }
     } catch (error) {
-      logger.error('AI color suggestion failed:', error)
+      logError('AI color suggestion failed:', error)
       return this.getDefaultColors(industry)
     }
   }
@@ -161,7 +170,7 @@ export class AIContentEnhancer {
         }
       }
     } catch (error) {
-      logger.error('SEO generation error:', error)
+      logError('SEO generation error:', error)
     }
 
     // Return default SEO content
@@ -210,7 +219,7 @@ export class AIContentEnhancer {
         `${year} ${make} ${model} - Quality pre-owned vehicle.`
       )
     } catch (error) {
-      logger.error('AI inventory description failed:', error)
+      logError('AI inventory description failed:', error)
       return `${year} ${make} ${model} - Quality pre-owned vehicle in excellent condition.`
     }
   }

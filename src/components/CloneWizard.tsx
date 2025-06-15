@@ -1,8 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { BrandConfig } from '@/lib/types'
-import { logger } from '@/lib/logger'
+import { logger } from '../lib/logger'
+
+// Helper function to safely log errors
+const logError = (message: string, error: unknown) => {
+  if (error instanceof Error) {
+    logger.error(message, error)
+  } else {
+    logger.error(message, String(error))
+  }
+}
 
 // URL validation helper
 function isValidUrl(urlString: string): boolean {
@@ -123,6 +132,8 @@ export default function CloneWizard() {
     setLaunchStatus('idle')
     setPreviewUrl(null)
 
+    logger.info('Starting AI Build with config:', brandConfig as unknown as Record<string, unknown>)
+
     try {
       const response = await fetch('/api/ai-build', {
         method: 'POST',
@@ -142,7 +153,7 @@ export default function CloneWizard() {
         throw new Error(data.error || 'Unknown error occurred')
       }
     } catch (error) {
-      logger.error('Error:', error)
+      logError('Error:', error)
       setError(error instanceof Error ? error.message : 'An unknown error occurred')
     } finally {
       setIsProcessing(false)
@@ -216,7 +227,7 @@ export default function CloneWizard() {
         throw new Error(data.error || 'Unknown error occurred')
       }
     } catch (error) {
-      logger.error('Error:', error)
+      logError('Error:', error)
       setError(error instanceof Error ? error.message : 'An unknown error occurred')
     } finally {
       setIsProcessing(false)
@@ -248,7 +259,7 @@ export default function CloneWizard() {
         window.open(data.url, '_blank')
       }, 2000)
     } catch (error) {
-      logger.error('Launch error:', error)
+      logError('Launch error:', error)
       setError(error instanceof Error ? error.message : 'Failed to launch preview')
       setLaunchStatus('error')
     }

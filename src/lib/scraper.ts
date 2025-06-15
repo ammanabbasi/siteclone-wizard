@@ -4,6 +4,20 @@ import * as path from 'path'
 import { URL } from 'url'
 import { logger } from './logger'
 
+// Helper function to safely log errors
+const logError = (message: string, error: unknown) => {
+  if (error instanceof Error) {
+    logger.error(message, error);
+  } else {
+    logger.error(message, String(error));
+  }
+};
+
+// Helper function to safely log warnings
+const logWarning = (message: string, error: unknown) => {
+  logger.warn(message, error instanceof Error ? error.message : String(error));
+};
+
 export interface ScraperOptions {
   targetUrl: string
   scrapeDepth?: number
@@ -65,7 +79,7 @@ export class WebScraper {
         try {
           await page.close()
         } catch (error) {
-          logger.warn('Failed to close page:', error)
+          logWarning('Failed to close page:', error)
         }
       }
     }
@@ -101,7 +115,7 @@ export class WebScraper {
     try {
       await page.goto(url, { waitUntil: 'networkidle' })
     } catch (error) {
-      logger.error(`Failed to navigate to ${url}:`, error)
+      logError(`Failed to navigate to ${url}:`, error)
       throw new Error(
         `Navigation failed: ${error instanceof Error ? error.message : String(error)}`
       )
@@ -158,7 +172,7 @@ export class WebScraper {
         try {
           await this.scrapePage(page, link, depth + 1)
         } catch (error) {
-          logger.warn(`Failed to scrape linked page ${link}:`, error)
+          logWarning(`Failed to scrape linked page ${link}:`, error)
           // Continue with other links even if one fails
         }
       }
@@ -184,7 +198,7 @@ export class WebScraper {
           styles.push(`/* Stylesheet from: ${url} */\n${cssContent}`)
         }
       } catch (error) {
-        logger.warn(`Failed to download stylesheet: ${url}`, error)
+        logWarning(`Failed to download stylesheet: ${url}`, error)
       }
     }
 
@@ -263,7 +277,7 @@ export class WebScraper {
       }
       return await response.text()
     } catch (error) {
-      logger.warn(`Failed to download stylesheet from ${url}:`, error)
+      logWarning(`Failed to download stylesheet from ${url}:`, error)
       return null
     }
   }
@@ -336,9 +350,9 @@ export class WebScraper {
 
         return Buffer.from(await response.arrayBuffer())
       } catch (error) {
-        logger.warn(`Attempt ${i + 1} failed for ${url}:`, error)
+        logWarning(`Attempt ${i + 1} failed for ${url}:`, error)
         if (i === maxRetries - 1) {
-          logger.error(`Failed to download asset after ${maxRetries} attempts: ${url}`)
+                      logError(`Failed to download asset after ${maxRetries} attempts: ${url}`, 'Max retries exceeded')
           return null
         }
         // Exponential backoff
@@ -375,7 +389,7 @@ export class WebScraper {
           })
         }
       } catch (error) {
-        logger.warn(`Failed to process asset: ${asset.url}`, error)
+        logWarning(`Failed to process asset: ${asset.url}`, error)
       }
     }
 
@@ -387,7 +401,7 @@ export class WebScraper {
       try {
         await this.browser.close()
       } catch (error) {
-        logger.error('Failed to close browser:', error)
+        logError('Failed to close browser:', error)
       } finally {
         this.browser = null
         this.visitedUrls.clear()
