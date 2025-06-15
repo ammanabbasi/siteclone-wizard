@@ -3,6 +3,7 @@ import * as path from 'path'
 import { EnhancedParseResult } from './enhanced-parser'
 import { BrandConfig } from './types'
 import { ContentSanitizer } from './content-sanitizer'
+import { logger } from './logger'
 
 export interface EnhancedGeneratorOptions {
   outputDir: string
@@ -14,7 +15,7 @@ export class EnhancedCodeGenerator {
   constructor(private options: EnhancedGeneratorOptions) {}
 
   async generate() {
-    console.log('Generating enhanced Next.js project...')
+    logger.info('Generating enhanced Next.js project')
 
     // Check if AI is enabled
     const useAI =
@@ -23,7 +24,7 @@ export class EnhancedCodeGenerator {
       process.env.OPENAI_API_KEY !== 'your-openai-api-key-here'
 
     if (useAI) {
-      console.log('🤖 AI content generation enabled!')
+      logger.info('🤖 AI content generation enabled')
 
       // Use AI-powered sanitizer
       const { AIContentSanitizer } = await import('./ai-content-sanitizer')
@@ -66,7 +67,7 @@ export class EnhancedCodeGenerator {
     // Generate placeholder images
     await this.generatePlaceholderImages()
 
-    console.log('Enhanced project generation complete!')
+    logger.info('Enhanced project generation complete')
   }
 
   private async createProjectStructure() {
@@ -414,11 +415,11 @@ body {
 
   private async copyAssets() {
     if (!this.options.parseResult.assets || this.options.parseResult.assets.length === 0) {
-      console.log('No assets to copy')
+      logger.info('No assets to copy')
       return
     }
 
-    console.log(`Copying ${this.options.parseResult.assets.length} assets...`)
+    logger.info('Copying assets', { count: this.options.parseResult.assets.length })
 
     const publicAssetsDir = path.join(this.options.outputDir, 'public/assets')
     await fs.mkdir(publicAssetsDir, { recursive: true })
@@ -431,7 +432,7 @@ body {
         try {
           await fs.access(sourcePath)
           await fs.copyFile(sourcePath, destPath)
-          console.log(`Copied asset: ${path.basename(asset.localPath)}`)
+          logger.debug('Copied asset', { filename: path.basename(asset.localPath) })
         } catch (error) {
           // Try alternative path
           const altSourcePath = path.join(
@@ -442,17 +443,17 @@ body {
           try {
             await fs.access(altSourcePath)
             await fs.copyFile(altSourcePath, destPath)
-            console.log(`Copied asset from alt path: ${path.basename(asset.localPath)}`)
+            logger.debug('Copied asset from alt path', { filename: path.basename(asset.localPath) })
           } catch (altError) {
-            console.warn(`Asset not found, skipping: ${asset.url}`)
+            logger.warn('Asset not found, skipping', { url: asset.url })
           }
         }
       } catch (error) {
-        console.warn(`Failed to copy asset: ${asset.url}`, error)
+        logger.warn('Failed to copy asset', { url: asset.url, error: error instanceof Error ? error : new Error(String(error)) })
       }
     }
 
-    console.log('Assets copied successfully')
+    logger.info('Assets copied successfully')
   }
 
   private async generateConfigs() {

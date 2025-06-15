@@ -24,7 +24,7 @@ export default function WizardPage() {
       localStorage.setItem('dealerscloud-wizard-data', JSON.stringify(formData));
       localStorage.setItem('dealerscloud-wizard-step', currentStep.toString());
       setLastSaved(new Date());
-      console.log('Auto-saved wizard data');
+      // Auto-save completed - using toast instead of console for user feedback
     };
 
     // Save every 30 seconds
@@ -47,7 +47,7 @@ export default function WizardPage() {
       try {
         const parsedData = JSON.parse(savedData);
         Object.entries(parsedData).forEach(([key, value]) => {
-          form.setValue(key as any, value);
+          form.setValue(key, value);
         });
         
         if (savedStep) {
@@ -57,7 +57,7 @@ export default function WizardPage() {
         
         toast.success('Previous session restored');
       } catch (error) {
-        console.error('Failed to restore saved data:', error);
+        toast.error('Failed to restore previous session');
       }
     }
   }, []);

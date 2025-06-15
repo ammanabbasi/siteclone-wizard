@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { WebScraper } from '@/lib/scraper'
 import { HTMLParser } from '@/lib/parser'
+import { logger } from '@/lib/logger'
 
 export async function POST(request: NextRequest) {
   try {
     const { url } = await request.json()
-    console.log('Test scrape starting for:', url)
+    logger.info('Test scrape starting', { url })
 
     // Create a temporary output directory
     const outputDir = `/tmp/test-scrape-${Date.now()}`
@@ -18,20 +19,20 @@ export async function POST(request: NextRequest) {
       timeout: 30000,
     })
 
-    console.log('Initializing scraper...')
+    logger.info('Initializing scraper')
     await scraper.initialize()
 
-    console.log('Scraping website...')
+    logger.info('Scraping website')
     const scrapeResult = await scraper.scrape()
 
-    console.log('Scrape complete. HTML length:', scrapeResult.html.length)
+    logger.info('Scrape complete', { htmlLength: scrapeResult.html.length })
 
     // Parse the HTML
-    console.log('Parsing HTML...')
+    logger.info('Parsing HTML')
     const parser = new HTMLParser(scrapeResult)
     const parseResult = parser.parse()
 
-    console.log('Parse complete. Components found:', parseResult.components.length)
+    logger.info('Parse complete', { componentsFound: parseResult.components.length })
 
     // Return debug information
     return NextResponse.json({
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Test scrape error:', error)
+    logger.error('Test scrape error', error instanceof Error ? error : new Error(String(error)))
     return NextResponse.json(
       {
         success: false,

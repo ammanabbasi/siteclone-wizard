@@ -187,7 +187,7 @@ export class EnhancedHTMLParser {
       
       /* Apply brand font */
       body, body * {
-        font-family: '${this.brandConfig.typography.fontFamily}', sans-serif !important;
+        font-family: '${this.brandConfig.typography?.fontFamily || 'Inter'}', sans-serif !important;
       }
       
       /* Primary color overrides */
@@ -233,7 +233,8 @@ export class EnhancedHTMLParser {
     this.$('head').append(brandStyles)
 
     // Add Google Font link
-    const fontLink = `<link href="https://fonts.googleapis.com/css2?family=${this.brandConfig.typography.fontFamily.replace(' ', '+')}:wght@400;500;600;700&display=swap" rel="stylesheet">`
+    const fontFamily = this.brandConfig.typography?.fontFamily || 'Inter'
+    const fontLink = `<link href="https://fonts.googleapis.com/css2?family=${fontFamily.replace(' ', '+')}:wght@400;500;600;700&display=swap" rel="stylesheet">`
     this.$('head').append(fontLink)
   }
 

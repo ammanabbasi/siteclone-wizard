@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { Checkbox } from '../../ui/checkbox';
-import { Select } from '../../ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Button } from '../../ui/button';
 import { generateSlug } from '../../../lib/utils';
 import { Plus, X } from 'lucide-react';
@@ -189,16 +189,19 @@ export function DealerInfoStep() {
             <div>
               <Label htmlFor="state">State</Label>
               <Select 
-                id="state"
                 value={form.watch('state') || ''}
-                onChange={(e) => form.setValue('state', e.target.value)}
+                onValueChange={(value) => form.setValue('state', value)}
               >
-                <option value="">Select state</option>
-                {US_STATES.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
+                <SelectTrigger id="state">
+                  <SelectValue placeholder="Select state" />
+                </SelectTrigger>
+                <SelectContent>
+                  {US_STATES.map((state) => (
+                    <SelectItem key={state} value={state}>
+                      {state}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
 
@@ -228,13 +231,16 @@ export function DealerInfoStep() {
             <div>
               <Label htmlFor="dealerSize">Dealer Size *</Label>
               <Select 
-                id="dealerSize"
                 value={form.watch('dealerSize') || ''}
-                onChange={(e) => form.setValue('dealerSize', e.target.value)}
+                onValueChange={(value) => form.setValue('dealerSize', value)}
               >
-                <option value="">Select dealer size</option>
-                <option value="small">Small (1-50 vehicles in inventory)</option>
-                <option value="large">Large (50+ vehicles in inventory)</option>
+                <SelectTrigger id="dealerSize">
+                  <SelectValue placeholder="Select dealer size" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="small">Small (1-50 vehicles in inventory)</SelectItem>
+                  <SelectItem value="large">Large (50+ vehicles in inventory)</SelectItem>
+                </SelectContent>
               </Select>
             </div>
 
@@ -254,14 +260,17 @@ export function DealerInfoStep() {
           <div>
             <Label htmlFor="businessType">Business Type</Label>
             <Select 
-              id="businessType"
               value={form.watch('businessType') || ''}
-              onChange={(e) => form.setValue('businessType', e.target.value)}
+              onValueChange={(value) => form.setValue('businessType', value)}
             >
-              <option value="">Select business type</option>
-              <option value="new">New Vehicles Only</option>
-              <option value="used">Used Vehicles Only</option>
-              <option value="both">New & Used Vehicles</option>
+              <SelectTrigger id="businessType">
+                <SelectValue placeholder="Select business type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="new">New Vehicles Only</SelectItem>
+                <SelectItem value="used">Used Vehicles Only</SelectItem>
+                <SelectItem value="both">New & Used Vehicles</SelectItem>
+              </SelectContent>
             </Select>
           </div>
 
@@ -270,13 +279,17 @@ export function DealerInfoStep() {
             <Label>Car Brands You Sell</Label>
             <div className="mt-2">
               <div className="flex gap-2">
-                <Select value={newBrand} onChange={(e) => setNewBrand(e.target.value)} className="flex-1">
-                  <option value="">Select a brand</option>
-                  {CAR_BRANDS.filter(brand => !watchedBrands.includes(brand)).map((brand) => (
-                    <option key={brand} value={brand}>
-                      {brand}
-                    </option>
-                  ))}
+                <Select value={newBrand} onValueChange={setNewBrand}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select a brand" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CAR_BRANDS.filter(brand => !watchedBrands.includes(brand)).map((brand) => (
+                      <SelectItem key={brand} value={brand}>
+                        {brand}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
                 <Button type="button" onClick={addBrand} disabled={!newBrand}>
                   <Plus className="h-4 w-4" />
@@ -342,13 +355,17 @@ export function DealerInfoStep() {
             <Label>Third-Party Tools & Integrations</Label>
             <div className="mt-2">
               <div className="flex gap-2">
-                <Select value={newTool} onChange={(e) => setNewTool(e.target.value)} className="flex-1">
-                  <option value="">Select a tool</option>
-                  {THIRD_PARTY_TOOLS.filter(tool => !watchedTools.includes(tool)).map((tool) => (
-                    <option key={tool} value={tool}>
-                      {tool}
-                    </option>
-                  ))}
+                <Select value={newTool} onValueChange={setNewTool}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select a tool" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {THIRD_PARTY_TOOLS.filter(tool => !watchedTools.includes(tool)).map((tool) => (
+                      <SelectItem key={tool} value={tool}>
+                        {tool}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
                 <Button type="button" onClick={addTool} disabled={!newTool}>
                   <Plus className="h-4 w-4" />

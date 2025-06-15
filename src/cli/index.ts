@@ -23,6 +23,7 @@ program
     try {
       await runWizard(options)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error:', error)
       process.exit(1)
     }
@@ -30,11 +31,19 @@ program
 
 program.parse()
 
-async function runWizard(options: any) {
+async function runWizard(options: {
+  url?: string;
+  config?: string;
+  depth?: string;
+  output?: string;
+  verbose?: boolean;
+}) {
+  // eslint-disable-next-line no-console
   console.log('🧙‍♂️ SiteClone Wizard starting...\n')
 
   // Validate inputs
   if (!options.url && !options.config) {
+    // eslint-disable-next-line no-console
     console.error('Error: Please provide either --url or --config option')
     process.exit(1)
   }
@@ -66,6 +75,7 @@ async function runWizard(options: any) {
   }
 
   if (!targetUrl) {
+    // eslint-disable-next-line no-console
     console.error('Error: Target URL is required')
     process.exit(1)
   }
@@ -73,12 +83,17 @@ async function runWizard(options: any) {
   const outputDir = path.resolve(options.output || './output')
   const scrapeDepth = parseInt(options.depth || '1')
 
+  // eslint-disable-next-line no-console
   console.log(`📍 Target URL: ${targetUrl}`)
+  // eslint-disable-next-line no-console
   console.log(`📁 Output directory: ${outputDir}`)
+  // eslint-disable-next-line no-console
   console.log(`🔍 Scrape depth: ${scrapeDepth}`)
+  // eslint-disable-next-line no-console
   console.log(`🎨 Brand: ${brandConfig.name}\n`)
 
   // Step 1: Scrape the website
+  // eslint-disable-next-line no-console
   console.log('🕷️  Scraping website...')
   const scraper = new WebScraper({
     targetUrl,
@@ -90,18 +105,24 @@ async function runWizard(options: any) {
   const scrapeResult = await scraper.scrape()
   await scraper.cleanup()
 
+  // eslint-disable-next-line no-console
   console.log(`✅ Scraped ${scrapeResult.links.length} links`)
+  // eslint-disable-next-line no-console
   console.log(`✅ Found ${scrapeResult.assets.length} assets\n`)
 
   // Step 2: Parse HTML and extract components
+  // eslint-disable-next-line no-console
   console.log('🔍 Parsing HTML...')
   const parser = new HTMLParser(scrapeResult)
   const parseResult = parser.parse()
 
+  // eslint-disable-next-line no-console
   console.log(`✅ Extracted ${parseResult.components.length} components`)
+  // eslint-disable-next-line no-console
   console.log(`✅ Found ${Object.keys(parseResult.textMap).length} text nodes\n`)
 
   // Step 3: Generate Next.js project
+  // eslint-disable-next-line no-console
   console.log('⚡ Generating Next.js project...')
   const generator = new CodeGenerator({
     outputDir,
@@ -111,17 +132,25 @@ async function runWizard(options: any) {
 
   await generator.generate()
 
+  // eslint-disable-next-line no-console
   console.log('\n✨ SiteClone Wizard completed successfully!')
+  // eslint-disable-next-line no-console
   console.log(`\n📦 Your cloned site is ready at: ${outputDir}`)
+  // eslint-disable-next-line no-console
   console.log('\nTo run your site:')
+  // eslint-disable-next-line no-console
   console.log(`  cd ${outputDir}`)
+  // eslint-disable-next-line no-console
   console.log('  npm install')
+  // eslint-disable-next-line no-console
   console.log('  npm run dev')
+  // eslint-disable-next-line no-console
   console.log('\n🎉 Happy coding!')
 }
 
 // Handle unhandled rejections
 process.on('unhandledRejection', (error) => {
+  // eslint-disable-next-line no-console
   console.error('Unhandled rejection:', error)
   process.exit(1)
 })

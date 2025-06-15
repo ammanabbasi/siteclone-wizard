@@ -35,12 +35,12 @@ export function PagesModulesStep() {
 
   const handlePageToggle = (pageId: string) => {
     const currentPages = enabledPages;
-    const currentNavOrder = navOrder;
+    const currentNavOrder = navOrder || [];
     
     if (currentPages.includes(pageId)) {
       // Remove page
-      const newPages = currentPages.filter(id => id !== pageId);
-      const newNavOrder = currentNavOrder.filter(id => id !== pageId);
+      const newPages = currentPages.filter((id: string) => id !== pageId);
+      const newNavOrder = currentNavOrder.filter((id: string) => id !== pageId);
       form.setValue('enabledPages', newPages);
       form.setValue('navOrder', newNavOrder);
     } else {
@@ -72,8 +72,8 @@ export function PagesModulesStep() {
   };
 
   const removeCustomPage = (pageId: string) => {
-    const newCustomPages = customPages.filter(page => page.id !== pageId);
-    const newNavOrder = navOrder.filter(id => id !== pageId);
+    const newCustomPages = customPages.filter((page: any) => page.id !== pageId);
+    const newNavOrder = navOrder.filter((id: string) => id !== pageId);
     
     form.setValue('customPages', newCustomPages);
     form.setValue('navOrder', newNavOrder);
@@ -101,7 +101,7 @@ export function PagesModulesStep() {
     const mandatoryPage = MANDATORY_PAGES.find(page => page.id === pageId);
     if (mandatoryPage) return mandatoryPage;
     
-    const customPage = customPages.find(page => page.id === pageId);
+    const customPage = customPages.find((page: any) => page.id === pageId);
     if (customPage) return { ...customPage, icon: FileText };
     
     return null;
@@ -200,7 +200,7 @@ export function PagesModulesStep() {
           {customPages.length > 0 && (
             <div className="space-y-2">
               <h4 className="font-medium">Custom Pages:</h4>
-              {customPages.map((page) => (
+              {customPages.map((page: any) => (
                 <div
                   key={page.id}
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
@@ -237,7 +237,7 @@ export function PagesModulesStep() {
         <CardContent className="space-y-4">
           {navOrder.length > 0 ? (
             <div className="space-y-2">
-              {navOrder.map((pageId, index) => {
+              {navOrder.map((pageId: string, index: number) => {
                 const pageInfo = getPageInfo(pageId);
                 if (!pageInfo) return null;
                 

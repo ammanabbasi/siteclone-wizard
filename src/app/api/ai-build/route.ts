@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import * as path from 'path'
 import { MultiPageEnhancedGenerator } from '@/lib/multi-page-enhanced-generator'
 import { BrandConfig } from '@/lib/types'
+import { logger } from '@/lib/logger'
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,9 +25,11 @@ export async function POST(req: NextRequest) {
     const outputId = uuidv4()
     const outputDir = path.join(process.cwd(), 'output', outputId)
 
-    console.log('🤖 Starting AI website generation for:', brandConfig.name)
-    console.log('Industry:', brandConfig.industry || 'General')
-    console.log('Output directory:', outputDir)
+    logger.info('🤖 Starting AI website generation', { 
+      brandName: brandConfig.name,
+      industry: brandConfig.industry || 'General',
+      outputDir 
+    })
 
     // Use AI to suggest colors if not provided
     if (!brandConfig.colors?.primary) {
@@ -55,7 +58,7 @@ export async function POST(req: NextRequest) {
 
     await generator.generate()
 
-    console.log('✅ AI website generation complete')
+    logger.info('✅ AI website generation complete', { outputId })
 
     return NextResponse.json({
       success: true,
@@ -66,7 +69,7 @@ export async function POST(req: NextRequest) {
       brandConfig,
     })
   } catch (error) {
-    console.error('AI Build error:', error)
+    logger.error('AI Build error', error instanceof Error ? error : new Error(String(error)))
     return NextResponse.json(
       {
         error: 'AI website generation failed',

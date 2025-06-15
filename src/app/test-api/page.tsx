@@ -2,6 +2,7 @@
 
 export default function TestAPI() {
   const testAPI = async () => {
+    // eslint-disable-next-line no-console
     console.log('Testing API...')
     try {
       const response = await fetch('/api/clone', {
@@ -24,13 +25,18 @@ export default function TestAPI() {
         }),
       })
 
+      // eslint-disable-next-line no-console
       console.log('Response status:', response.status)
       const data = await response.json()
+      // eslint-disable-next-line no-console
       console.log('Response data:', data)
-      alert('API Response: ' + JSON.stringify(data, null, 2))
+      // eslint-disable-next-line no-console
+      console.log('API Response:', data)
+      alert('API Success! Check console for response')
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('API Error:', error)
-      alert('API Error: ' + error.message)
+      alert('API Error: ' + (error instanceof Error ? error.message : 'Unknown error'))
     }
   }
 

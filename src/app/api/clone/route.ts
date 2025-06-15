@@ -7,6 +7,7 @@ import * as fs from 'fs/promises'
 import * as path from 'path'
 import { randomUUID } from 'crypto'
 import archiver from 'archiver'
+import { logger } from '@/lib/logger'
 
 interface CloneRequest {
   targetUrl: string
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body: CloneRequest = await req.json()
-    console.log('API: Received request for:', body.targetUrl)
+    logger.info('API: Received clone request', { targetUrl: body.targetUrl })
 
     // Validate request
     if (!body.targetUrl || !isValidUrl(body.targetUrl)) {
@@ -100,13 +101,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    console.log('API: Output directory:', outputDir)
+    logger.info('API: Setup output directory', { outputDir })
 
     // Create output directory
     await fs.mkdir(outputDir, { recursive: true })
 
     // Initialize scraper
-    console.log('API: Initializing scraper...')
+    logger.info('API: Initializing scraper')
     scraper = new WebScraper({
       targetUrl: body.targetUrl,
       outputDir,
@@ -117,29 +118,29 @@ export async function POST(req: NextRequest) {
     await scraper.initialize()
 
     // Scrape the website
-    console.log('API: Starting scrape...')
+    logger.info('API: Starting scrape')
     const scrapeResult = await scraper.scrape()
-    console.log('API: Scrape result:', {
+    logger.info('API: Scrape result', {
       htmlLength: scrapeResult.html.length,
       cssCount: scrapeResult.css.length,
       assetsCount: scrapeResult.assets.length,
     })
 
     // Use enhanced parser and generator for better results
-    console.log('API: Using enhanced parser...')
+    logger.info('API: Using enhanced parser')
     const enhancedParser = new EnhancedHTMLParser(scrapeResult, body.brandConfig)
     const enhancedParseResult = enhancedParser.parse()
-    console.log('API: Enhanced parse result ready')
+    logger.info('API: Enhanced parse result ready')
 
     // Generate the project with enhanced generator
-    console.log('API: Generating enhanced project...')
+    logger.info('API: Generating enhanced project')
     const enhancedGenerator = new EnhancedCodeGenerator({
       outputDir,
       brandConfig: body.brandConfig,
       parseResult: enhancedParseResult,
     })
     await enhancedGenerator.generate()
-    console.log('API: Enhanced project generated successfully')
+    logger.info('API: Enhanced project generated successfully')
 
     // Create ZIP file
     const zipPath = path.join(process.cwd(), 'output', `${outputId}.zip`)
@@ -158,7 +159,7 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('API Error:', error)
+    logger.error('API Error', error instanceof Error ? error : new Error(String(error)))
 
     // Clean up on error
     try {
@@ -167,7 +168,7 @@ export async function POST(req: NextRequest) {
       }
       await fs.rm(outputDir, { recursive: true, force: true })
     } catch (cleanupError) {
-      console.error('Cleanup error:', cleanupError)
+      logger.error('Cleanup error', cleanupError instanceof Error ? cleanupError : new Error(String(cleanupError)))
     }
 
     // Provide user-friendly error messages
@@ -201,7 +202,7 @@ export async function POST(req: NextRequest) {
       try {
         await scraper.cleanup()
       } catch (error) {
-        console.error('Failed to cleanup scraper:', error)
+        logger.error('Failed to cleanup scraper', error instanceof Error ? error : new Error(String(error)))
       }
     }
   }

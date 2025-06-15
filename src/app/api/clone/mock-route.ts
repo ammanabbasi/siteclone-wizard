@@ -24,11 +24,16 @@ export async function POST(request: NextRequest) {
     // Simulate processing time
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
+    // Simulate random failure (20% chance)
+    if (Math.random() < 0.2) {
+      throw new Error('Failed to scrape website')
+    }
+
     return NextResponse.json(mockResult)
   } catch (error) {
     console.error('Mock clone error:', error)
     return NextResponse.json(
-      { error: 'Failed to clone website', details: error.message },
+      { error: 'Failed to clone website', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

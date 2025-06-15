@@ -2,6 +2,7 @@ import * as fs from 'fs/promises'
 import * as path from 'path'
 import { BrandConfig } from './types'
 import { AIWebsiteBuilder } from './ai-website-builder'
+import { logger } from './logger'
 
 export interface AIGeneratorOptions {
   outputDir: string
@@ -12,7 +13,7 @@ export class AIEnhancedGenerator {
   constructor(private options: AIGeneratorOptions) {}
 
   async generate() {
-    console.log('🤖 AI is generating a complete professional website...')
+    logger.info('🤖 AI is generating a complete professional website')
 
     // Create project structure
     await this.createProjectStructure()
@@ -39,7 +40,7 @@ export class AIEnhancedGenerator {
     // Generate placeholder images
     await this.generatePlaceholderImages()
 
-    console.log('✨ AI-powered website generation complete!')
+    logger.info('✨ AI-powered website generation complete')
   }
 
   async createProjectStructure() {

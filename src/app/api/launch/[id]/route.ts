@@ -3,6 +3,7 @@ import { spawn } from 'child_process'
 import * as path from 'path'
 import * as fs from 'fs/promises'
 import { createServer } from 'net'
+import { logger } from '@/lib/logger'
 
 // Configuration
 const MAX_CONCURRENT_PREVIEWS = parseInt(process.env.MAX_CONCURRENT_PREVIEWS || '5')
@@ -11,7 +12,7 @@ const MAX_CONCURRENT_PREVIEWS = parseInt(process.env.MAX_CONCURRENT_PREVIEWS || 
 const runningProcesses = new Map<
   string,
   {
-    process: any
+    process: ReturnType<typeof spawn>
     port: number
     url: string
     killed: boolean
@@ -24,7 +25,7 @@ async function findAvailablePort(startPort = 3100): Promise<number> {
   return new Promise((resolve) => {
     const server = createServer()
     server.listen(startPort, () => {
-      const port = (server.address() as any).port
+      const port = (server.address() as { port: number }).port
       server.close(() => resolve(port))
     })
     server.on('error', () => {
@@ -51,12 +52,12 @@ function killOldestProcessIfNeeded() {
     if (oldestId) {
       const info = runningProcesses.get(oldestId)
       if (info) {
-        console.log(`Killing oldest process ${oldestId} to make room`)
+        logger.info('Killing oldest process to make room', { processId: oldestId })
         try {
           info.process.kill()
           info.killed = true
         } catch (error) {
-          console.error(`Failed to kill process ${oldestId}:`, error)
+          logger.error('Failed to kill process', error instanceof Error ? error : new Error(String(error)))
         }
         runningProcesses.delete(oldestId)
       }
@@ -104,15 +105,15 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const port = await findAvailablePort()
     const url = `http://localhost:${port}`
 
-    console.log(`Launching project ${outputId} on port ${port}`)
+    logger.info('Launching project', { outputId, port })
 
     // Install dependencies if needed
     const nodeModulesPath = path.join(outputDir, 'node_modules')
     try {
       await fs.access(nodeModulesPath)
-      console.log('Dependencies already installed')
+      logger.info('Dependencies already installed')
     } catch {
-      console.log('Installing dependencies...')
+      logger.info('Installing dependencies')
 
       // Check which package manager to use
       let packageManager = 'npm'
@@ -171,15 +172,15 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     // Handle process output
     devProcess.stdout?.on('data', (data) => {
-      console.log(`[${outputId}] ${data}`)
+      logger.debug('Process stdout', { outputId, data: data.toString() })
     })
 
     devProcess.stderr?.on('data', (data) => {
-      console.error(`[${outputId}] ${data}`)
+      logger.warn('Process stderr', { outputId, data: data.toString() })
     })
 
     devProcess.on('close', (code) => {
-      console.log(`[${outputId}] Process exited with code ${code}`)
+      logger.info('Process exited', { outputId, code })
       const processInfo = runningProcesses.get(outputId)
       if (processInfo) {
         processInfo.killed = true
@@ -187,7 +188,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     })
 
     devProcess.on('error', (error) => {
-      console.error(`[${outputId}] Process error:`, error)
+      logger.error('Process error', error instanceof Error ? error : new Error(String(error)))
       const processInfo = runningProcesses.get(outputId)
       if (processInfo) {
         processInfo.killed = true
@@ -205,7 +206,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       activeProcesses: runningProcesses.size,
     })
   } catch (error) {
-    console.error('Launch error:', error)
+    logger.error('Launch error', error instanceof Error ? error : new Error(String(error)))
     return NextResponse.json(
       {
         error: 'Failed to launch project',
@@ -239,7 +240,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     // Kill the process
     try {
       // On Windows, we need to kill the entire process tree
-      if (process.platform === 'win32') {
+      if (process.platform === 'win32' && processInfo.process.pid) {
         spawn('taskkill', ['/pid', processInfo.process.pid.toString(), '/f', '/t'], { shell: true })
       } else {
         processInfo.process.kill('SIGTERM')
@@ -247,7 +248,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       processInfo.killed = true
       runningProcesses.delete(outputId)
     } catch (error) {
-      console.error(`Failed to kill process ${outputId}:`, error)
+      logger.error('Failed to kill process', error instanceof Error ? error : new Error(String(error)))
       return NextResponse.json({ error: 'Failed to stop process properly' }, { status: 500 })
     }
 
@@ -257,7 +258,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       activeProcesses: runningProcesses.size,
     })
   } catch (error) {
-    console.error('Stop error:', error)
+    logger.error('Stop error', error instanceof Error ? error : new Error(String(error)))
     return NextResponse.json(
       {
         error: 'Failed to stop project',
@@ -270,12 +271,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
 // Cleanup on process exit
 process.on('exit', () => {
-  Array.from(runningProcesses.entries()).forEach(([id, info]) => {
+  Array.from(runningProcesses.entries()).forEach(([, info]) => {
     if (!info.killed) {
       try {
         info.process.kill()
       } catch (error) {
-        console.error(`Failed to kill process ${id} on exit:`, error)
+        logger.error('Failed to kill process on exit', error instanceof Error ? error : new Error(String(error)))
       }
     }
   })

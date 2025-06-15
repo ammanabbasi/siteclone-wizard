@@ -9,10 +9,12 @@ export default function TestPage() {
   const handleClick = () => {
     setCount(count + 1)
     setMessage(`Button clicked ${count + 1} times`)
+    // eslint-disable-next-line no-console
     console.log('Button clicked!', count + 1)
   }
 
   const testApi = async () => {
+    // eslint-disable-next-line no-console
     console.log('Testing API...')
     try {
       const response = await fetch('/api/test-scrape', {
@@ -22,9 +24,11 @@ export default function TestPage() {
       })
       const data = await response.json()
       setMessage(`API Response: ${JSON.stringify(data.success)}`)
+      // eslint-disable-next-line no-console
       console.log('API Response:', data)
     } catch (error) {
       setMessage(`API Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      // eslint-disable-next-line no-console
       console.error('API Error:', error)
     }
   }

@@ -1,5 +1,6 @@
 import { BrandConfig } from './types'
 import { AIContentEnhancer } from './ai-enhancer'
+import { logger } from './logger'
 
 export interface WebsiteSection {
   id: string
@@ -38,7 +39,7 @@ export class AIWebsiteBuilder {
   }
 
   async buildProfessionalWebsite(brandConfig: BrandConfig): Promise<ProfessionalWebsite> {
-    console.log('🤖 AI is building a professional website layout...')
+    logger.info('🤖 AI is building a professional website layout')
 
     // Determine sections based on industry
     const sections = await this.determineSections(brandConfig)

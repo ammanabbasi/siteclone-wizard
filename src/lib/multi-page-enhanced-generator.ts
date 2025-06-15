@@ -5,6 +5,7 @@ import {
   MultiPageDealershipBuilder,
   DealershipConfig,
 } from './multi-page-dealership-builder'
+import { logger } from './logger'
 
 export interface AIGeneratorOptions {
   outputDir: string
@@ -19,7 +20,7 @@ export class MultiPageEnhancedGenerator {
   constructor(private options: AIGeneratorOptions) {}
 
   async generate() {
-    console.log('🤖 Generating multi-page dealership website...')
+    logger.info('🤖 Generating multi-page dealership website')
 
     // Build multi-page website
     const builder = new MultiPageDealershipBuilder()
@@ -53,7 +54,7 @@ export class MultiPageEnhancedGenerator {
     // Generate placeholder images
     await this.generatePlaceholderImages()
 
-    console.log('✨ Multi-page dealership website generation complete!')
+    logger.info('✨ Multi-page dealership website generation complete')
   }
 
   async createProjectStructure() {

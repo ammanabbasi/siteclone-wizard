@@ -1,5 +1,6 @@
 import { BrandConfig } from './types'
 import { AIContentEnhancer } from './ai-enhancer'
+import { logger } from './logger'
 
 export interface PageConfig {
   path: string
@@ -53,7 +54,7 @@ export class MultiPageDealershipBuilder {
   async buildMultiPageDealership(
     brandConfig: DealershipConfig
   ): Promise<MultiPageWebsite> {
-    console.log('🚗 Building multi-page dealership website...')
+    logger.info('🚗 Building multi-page dealership website')
 
     // Force automotive industry
     brandConfig.industry = 'automotive'

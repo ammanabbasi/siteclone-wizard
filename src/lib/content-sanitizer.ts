@@ -244,7 +244,7 @@ export class ContentSanitizer {
     this.$('*')
       .contents()
       .filter(function () {
-        return this.type === 'text' && this.data
+        return this.type === 'text' && !!this.data
       })
       .each((_, elem) => {
         if (elem.type === 'text' && elem.data) {
@@ -259,7 +259,7 @@ export class ContentSanitizer {
     this.$('*')
       .contents()
       .filter(function () {
-        return this.type === 'text' && this.data
+        return this.type === 'text' && !!this.data
       })
       .each((_, elem) => {
         if (elem.type === 'text' && elem.data) {

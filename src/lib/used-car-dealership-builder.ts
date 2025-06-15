@@ -1,6 +1,7 @@
 import { BrandConfig } from './types'
 import { AIContentEnhancer } from './ai-enhancer'
 import { WebsiteSection, ProfessionalWebsite } from './ai-website-builder'
+import { logger } from './logger'
 
 export interface DealershipConfig extends BrandConfig {
   dealership: {
@@ -41,7 +42,7 @@ export class UsedCarDealershipBuilder {
   async buildDealershipWebsite(
     brandConfig: DealershipConfig
   ): Promise<ProfessionalWebsite> {
-    console.log('Building used car dealership website for:', brandConfig.name)
+    logger.info('Building used car dealership website', { brandName: brandConfig.name })
 
     // Force automotive industry
     brandConfig.industry = 'automotive'

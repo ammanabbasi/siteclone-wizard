@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import * as path from 'path'
 import { BrandConfig } from '@/lib/types'
 import { MultiPageEnhancedGenerator } from '@/lib/multi-page-enhanced-generator'
+import { logger } from '@/lib/logger'
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,10 +26,11 @@ export async function POST(req: NextRequest) {
     const outputId = uuidv4()
     const outputDir = path.join(process.cwd(), 'output', outputId)
 
-    console.log('🚗 Starting AI-inspired dealership website generation')
-    console.log('Dealership:', brandConfig.name)
-    console.log('Inspiration URL:', inspirationUrl || 'None (pure AI generation)')
-    console.log('Output directory:', outputDir)
+    logger.info('🚗 Starting AI-inspired dealership website generation', {
+      dealership: brandConfig.name,
+      inspirationUrl: inspirationUrl || 'None (pure AI generation)',
+      outputDir
+    })
 
     // Use AI to suggest colors if not provided
     if (!brandConfig.colors?.primary) {
@@ -47,49 +49,47 @@ export async function POST(req: NextRequest) {
     brandConfig.industry = 'automotive' // Always automotive for dealerships
 
     // Create inspiration data based on URL (conceptual, not actual scraping)
-    let inspirationData = null
     if (inspirationUrl) {
       try {
-        console.log('🌐 Using URL as design inspiration...')
+        logger.info('🌐 Using URL as design inspiration', { inspirationUrl })
 
         // Use AI to imagine what a dealership site at this URL might look like
         // This is conceptual inspiration, not actual scraping
-        inspirationData = {
-          conceptUrl: inspirationUrl,
-          suggestedStyle:
-            inspirationUrl.includes('luxury') || inspirationUrl.includes('premium')
-              ? 'luxury'
-              : inspirationUrl.includes('budget') || inspirationUrl.includes('value')
-                ? 'value-focused'
-                : 'professional',
-          // AI will use this as a hint for the type of dealership website to generate
-          designHints: [
-            'modern-layout',
-            'inventory-focused',
-            'customer-testimonials',
-            'financing-calculator',
-          ],
-        }
+        // const inspirationData = {
+        //   conceptUrl: inspirationUrl,
+        //   suggestedStyle:
+        //     inspirationUrl.includes('luxury') || inspirationUrl.includes('premium')
+        //       ? 'luxury'
+        //       : inspirationUrl.includes('budget') || inspirationUrl.includes('value')
+        //         ? 'value-focused'
+        //         : 'professional',
+        //   // AI will use this as a hint for the type of dealership website to generate
+        //   designHints: [
+        //     'modern-layout',
+        //     'inventory-focused',
+        //     'customer-testimonials',
+        //     'financing-calculator',
+        //   ],
+        // }
 
-        console.log('✅ Inspiration concept prepared')
+        logger.info('✅ Inspiration concept prepared')
       } catch (error) {
-        console.warn(
-          'Warning: Could not process inspiration URL, proceeding with pure AI generation',
-          error
-        )
+        logger.warn('Could not process inspiration URL, proceeding with pure AI generation', {
+          error: error instanceof Error ? { name: error.name, message: error.message } : String(error)
+        })
       }
     }
 
     // Use multi-page generator
-    console.log('🤖 Building AI-powered multi-page dealership website...')
+    logger.info('🤖 Building AI-powered multi-page dealership website')
     const generator = new MultiPageEnhancedGenerator({
       outputDir,
       brandConfig,
     })
 
-    await generator.generate(inspirationData)
+    await generator.generate()
 
-    console.log('✅ AI-inspired dealership website generation complete')
+    logger.info('✅ AI-inspired dealership website generation complete', { outputId })
 
     return NextResponse.json({
       success: true,
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       inspirationUsed: !!inspirationUrl,
     })
   } catch (error) {
-    console.error('AI Inspire error:', error)
+    logger.error('AI Inspire error', error instanceof Error ? error : new Error(String(error)))
     return NextResponse.json(
       {
         error: 'AI-inspired website generation failed',

@@ -2,6 +2,7 @@ import * as fs from 'fs/promises'
 import * as path from 'path'
 import { ParsedComponent, ParseResult } from './parser'
 import { BrandConfig } from './types'
+import { logger } from './logger'
 
 export interface GeneratorOptions {
   outputDir: string
@@ -18,7 +19,7 @@ export class CodeGenerator {
   constructor(private options: GeneratorOptions) {}
 
   async generate() {
-    console.log('Generating Next.js project...')
+    logger.info('Generating Next.js project')
 
     // Create project structure
     await this.createProjectStructure()
@@ -44,7 +45,7 @@ export class CodeGenerator {
     // Generate i18n/text content file
     await this.generateTextContent()
 
-    console.log('Project generation complete!')
+    logger.info('Project generation complete')
   }
 
   private async createProjectStructure() {
@@ -416,11 +417,11 @@ export default function Home() {
 
   private async copyAssets() {
     if (!this.options.assets || this.options.assets.length === 0) {
-      console.log('No assets to copy')
+      logger.info('No assets to copy')
       return
     }
 
-    console.log(`Copying ${this.options.assets.length} assets...`)
+    logger.info('Copying assets', { count: this.options.assets.length })
 
     // Ensure public/assets directory exists
     const publicAssetsDir = path.join(this.options.outputDir, 'public/assets')
@@ -438,9 +439,9 @@ export default function Home() {
         try {
           await fs.access(sourcePath)
           await fs.copyFile(sourcePath, destPath)
-          console.log(`Copied asset: ${path.basename(asset.localPath)}`)
+          logger.debug('Copied asset', { filename: path.basename(asset.localPath) })
         } catch (error) {
-          console.warn(`Asset not found at ${sourcePath}, trying alternative path...`)
+          logger.debug('Asset not found at primary path, trying alternative', { sourcePath })
           // Try with parent directory if the first attempt fails
           const altSourcePath = path.join(
             path.dirname(this.options.outputDir),
@@ -450,17 +451,17 @@ export default function Home() {
           try {
             await fs.access(altSourcePath)
             await fs.copyFile(altSourcePath, destPath)
-            console.log(`Copied asset from alt path: ${path.basename(asset.localPath)}`)
+            logger.debug('Copied asset from alt path', { filename: path.basename(asset.localPath) })
           } catch (altError) {
-            console.warn(`Asset not found at either path, skipping: ${asset.url}`)
+            logger.warn('Asset not found at either path, skipping', { url: asset.url })
           }
         }
       } catch (error) {
-        console.warn(`Failed to copy asset: ${asset.url}`, error)
+        logger.warn('Failed to copy asset', { url: asset.url, error: error instanceof Error ? error : new Error(String(error)) })
       }
     }
 
-    console.log('Assets copied successfully')
+    logger.info('Assets copied successfully')
   }
 
   private async generateConfigs() {

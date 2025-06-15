@@ -1,13 +1,13 @@
 'use client';
 
-import { useWizard } from '../wizard-context-simple';
+import { useWizard } from '../wizard-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 import { Checkbox } from '../../ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Button } from '../../ui/button';
-import { generateSlug } from '../../../lib/utils';
+import { generateSlug } from '@/lib/utils';
 import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -57,7 +57,7 @@ export function DealerInfoStep() {
   };
 
   const removeBrand = (brand: string) => {
-    form.setValue('brands', watchedBrands.filter(b => b !== brand));
+    form.setValue('brands', watchedBrands.filter((b: string) => b !== brand));
   };
 
   const addTool = () => {
@@ -68,7 +68,7 @@ export function DealerInfoStep() {
   };
 
   const removeTool = (tool: string) => {
-    form.setValue('thirdPartyTools', watchedTools.filter(t => t !== tool));
+    form.setValue('thirdPartyTools', watchedTools.filter((t: string) => t !== tool));
   };
 
   return (
@@ -202,16 +202,19 @@ export function DealerInfoStep() {
             <div>
               <Label htmlFor="state">State</Label>
               <Select 
-                id="state"
                 value={form.watch('state') || ''}
-                onChange={(e) => form.setValue('state', e.target.value)}
+                onValueChange={(value) => form.setValue('state', value)}
               >
-                <option value="">Select state</option>
-                {US_STATES.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
+                <SelectTrigger id="state">
+                  <SelectValue placeholder="Select state" />
+                </SelectTrigger>
+                <SelectContent>
+                  {US_STATES.map((state) => (
+                    <SelectItem key={state} value={state}>
+                      {state}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
 
@@ -236,19 +239,22 @@ export function DealerInfoStep() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-                      <div>
-              <Label htmlFor="businessType">Business Type</Label>
-              <Select 
-                id="businessType"
-                value={form.watch('businessType') || ''}
-                onChange={(e) => form.setValue('businessType', e.target.value)}
-              >
-                <option value="">Select business type</option>
-                <option value="new">New Vehicles Only</option>
-                <option value="used">Used Vehicles Only</option>
-                <option value="both">New & Used Vehicles</option>
-              </Select>
-            </div>
+          <div>
+            <Label htmlFor="businessType">Business Type</Label>
+            <Select 
+              value={form.watch('businessType') || ''}
+              onValueChange={(value) => form.setValue('businessType', value as 'new' | 'used' | 'both')}
+            >
+              <SelectTrigger id="businessType">
+                <SelectValue placeholder="Select business type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="new">New Vehicles Only</SelectItem>
+                <SelectItem value="used">Used Vehicles Only</SelectItem>
+                <SelectItem value="both">New & Used Vehicles</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           {/* Car Brands */}
           <div>
@@ -274,7 +280,7 @@ export function DealerInfoStep() {
               
               {watchedBrands.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {watchedBrands.map((brand) => (
+                  {watchedBrands.map((brand: string) => (
                     <div
                       key={brand}
                       className="flex items-center gap-1 rounded-md bg-blue-100 px-2 py-1 text-sm"
@@ -308,8 +314,8 @@ export function DealerInfoStep() {
           <div className="flex items-center space-x-2">
             <Checkbox
               id="hasFinancing"
-              checked={form.watch('hasFinancing')}
-              onCheckedChange={(checked) => form.setValue('hasFinancing', !!checked)}
+              checked={form.watch('hasFinancing') || false}
+              onChange={(e) => form.setValue('hasFinancing', e.target.checked)}
             />
             <Label htmlFor="hasFinancing">We offer vehicle financing</Label>
           </div>
@@ -349,7 +355,7 @@ export function DealerInfoStep() {
               
               {watchedTools.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {watchedTools.map((tool) => (
+                  {watchedTools.map((tool: string) => (
                     <div
                       key={tool}
                       className="flex items-center gap-1 rounded-md bg-green-100 px-2 py-1 text-sm"
